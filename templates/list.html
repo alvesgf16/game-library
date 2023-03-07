@@ -18,15 +18,11 @@
           </tr>
         </thead>
         <tbody>
+          {% for data in table_data %}
           <tr>
-            <td>God of War</td>
+            <td>{{ data }}</td>
           </tr>
-          <tr>
-            <td>Skyrim</td>
-          </tr>
-          <tr>
-            <td>Valorant</td>
-          </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>
