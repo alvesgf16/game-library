@@ -24,7 +24,7 @@ app = Flask(__name__)
 
 
 @app.route("/start")
-def hello() -> str:
+def start() -> str:
     tetris = Game("Tetris", "Puzzle", "Atari")
     skyrim = Game("Skyrim", "RPG", "PS3")
     crash = Game("Crash Bandicoot", "Platform", "PS1")
