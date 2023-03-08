@@ -20,15 +20,19 @@ class Game:
         return self.__platform
 
 
+class Games(list[Game]):
+    def __init__(self) -> None:
+        self.append(Game("Tetris", "Puzzle", "Atari"))
+        self.append(Game("Skyrim", "RPG", "PS3"))
+        self.append(Game("Crash Bandicoot", "Platform", "PS1"))
+
+
 app = Flask(__name__)
+games = Games()
 
 
 @app.route("/")
 def index() -> str:
-    tetris = Game("Tetris", "Puzzle", "Atari")
-    skyrim = Game("Skyrim", "RPG", "PS3")
-    crash = Game("Crash Bandicoot", "Platform", "PS1")
-    games = [tetris, skyrim, crash]
     return render_template("index.html", a_title="Games", table_data=games)
 
 
