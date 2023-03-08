@@ -13,6 +13,12 @@ class TestGameLibrary(unittest.TestCase):
             response, b"<h1>Games</h1>"
         )
 
+    def test_table_headers(self):
+        response = self.__when_the_test_client_calls_the_start_route()
+        self.__then_the_cells_in_a_table_line_contain_the_correct_data(
+            response, b"<th>Name</th>", b"<th>Genre</th>", b"<th>Platform</th>"
+        )
+
     def test_table_data(self):
         response = self.__when_the_test_client_calls_the_start_route()
         self.__then_the_cells_in_a_table_line_contain_the_correct_data(
