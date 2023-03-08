@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 
 class Game:
@@ -33,6 +33,21 @@ games = Games()
 
 @app.route("/")
 def index() -> str:
+    return render_template("index.html", a_title="Games", table_data=games)
+
+
+@app.route("/form")
+def form() -> str:
+    return render_template("form.html", a_title="Create a game")
+
+
+@app.route("/create", methods=["POST"])
+def create() -> str:
+    name = request.form["name"]
+    genre = request.form["genre"]
+    platform = request.form["platform"]
+    game = Game(name, genre, platform)
+    games.append(game)
     return render_template("index.html", a_title="Games", table_data=games)
 
 

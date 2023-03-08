@@ -34,8 +34,27 @@ class TestGameLibrary(unittest.TestCase):
             b"<td>PS1</td>",
         )
 
+    def test_game_creation(self):
+        response = self.__when_the_test_client_posts_on_the_create_route()
+        self.__then_the_cells_in_a_table_line_contain_the_correct_data(
+            response,
+            b"<td>League of Legends</td>",
+            b"<td>MOBA</td>",
+            b"<td>PC</td>",
+        )
+
     def __when_the_test_client_calls_the_index_route(self):
         return self.app.get("/")
+
+    def __when_the_test_client_posts_on_the_create_route(self):
+        return self.app.post(
+            "/create",
+            data={
+                "name": "League of Legends",
+                "genre": "MOBA",
+                "platform": "PC",
+            },
+        )
 
     def __then_the_page_header_contains_the_correct_text(
         self, response, header_text
@@ -43,7 +62,11 @@ class TestGameLibrary(unittest.TestCase):
         assert header_text in response.data
 
     def __then_the_cells_in_a_table_line_contain_the_correct_data(
-        self, response, name_cell, genre_cell, platform_cell
+        self,
+        response,
+        name_cell,
+        genre_cell,
+        platform_cell,
     ):
         assert name_cell in response.data
         assert genre_cell in response.data
