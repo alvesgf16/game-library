@@ -15,12 +15,16 @@
         <thead class="thead-default">
           <tr>
             <th>Name</th>
+            <th>Genre</th>
+            <th>Platform</th>
           </tr>
         </thead>
         <tbody>
           {% for data in table_data %}
           <tr>
             <td>{{ data.name }}</td>
+            <td>{{ data.genre }}</td>
+            <td>{{ data.platform }}</td>
           </tr>
           {% endfor %}
         </tbody>
