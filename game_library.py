@@ -23,13 +23,13 @@ class Game:
 app = Flask(__name__)
 
 
-@app.route("/start")
-def start() -> str:
+@app.route("/")
+def index() -> str:
     tetris = Game("Tetris", "Puzzle", "Atari")
     skyrim = Game("Skyrim", "RPG", "PS3")
     crash = Game("Crash Bandicoot", "Platform", "PS1")
     games = [tetris, skyrim, crash]
-    return render_template("list.html", a_title="Games", table_data=games)
+    return render_template("index.html", a_title="Games", table_data=games)
 
 
 if __name__ == "__main__":

@@ -8,19 +8,19 @@ class TestGameLibrary(unittest.TestCase):
         self.app = app.test_client()
 
     def test_page_header(self):
-        response = self.__when_the_test_client_calls_the_start_route()
+        response = self.__when_the_test_client_calls_the_index_route()
         self.__then_the_page_header_contains_the_correct_text(
             response, b"<h1>Games</h1>"
         )
 
     def test_table_headers(self):
-        response = self.__when_the_test_client_calls_the_start_route()
+        response = self.__when_the_test_client_calls_the_index_route()
         self.__then_the_cells_in_a_table_line_contain_the_correct_data(
             response, b"<th>Name</th>", b"<th>Genre</th>", b"<th>Platform</th>"
         )
 
     def test_table_data(self):
-        response = self.__when_the_test_client_calls_the_start_route()
+        response = self.__when_the_test_client_calls_the_index_route()
         self.__then_the_cells_in_a_table_line_contain_the_correct_data(
             response, b"<td>Tetris</td>", b"<td>Puzzle</td>", b"<td>Atari</td>"
         )
@@ -34,8 +34,8 @@ class TestGameLibrary(unittest.TestCase):
             b"<td>PS1</td>",
         )
 
-    def __when_the_test_client_calls_the_start_route(self):
-        return self.app.get("/start")
+    def __when_the_test_client_calls_the_index_route(self):
+        return self.app.get("/")
 
     def __then_the_page_header_contains_the_correct_text(
         self, response, header_text
