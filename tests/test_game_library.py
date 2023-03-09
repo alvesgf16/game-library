@@ -51,6 +51,22 @@ class TestGameLibrary(unittest.TestCase):
             b"<td>PC</td>",
         )
 
+    def test_succesful_login(self):
+        response = self.__when_the_test_client_posts_on_a_route(
+            "/auth", {"username": "alvesgf16", "password": "alohomora"}
+        )
+        self.__then_the_page_header_contains_the_correct_text(
+            response, b"<h1>Games</h1>"
+        )
+
+    def test_unsuccesful_login(self):
+        response = self.__when_the_test_client_posts_on_a_route(
+            "/auth", {"username": "alvesgf16", "password": "houston"}
+        )
+        self.__then_the_page_header_contains_the_correct_text(
+            response, b"<h1>Login</h1>"
+        )
+
     def __when_the_test_client_calls_the_index_route(self):
         return self.app.get("/")
 

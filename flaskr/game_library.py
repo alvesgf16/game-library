@@ -26,3 +26,16 @@ def create() -> Response:
     platform = request.form["platform"]
     game_library.create(name, genre, platform)
     return redirect("/")
+
+
+@bp.route("/login")
+def login() -> str:
+    return render_template("login.html", a_title="Login")
+
+
+@bp.route("/auth", methods=["POST"])
+def auth() -> Response:
+    if request.form["password"] == "alohomora":
+        return redirect("/")
+    else:
+        return redirect("/login")
