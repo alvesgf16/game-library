@@ -68,8 +68,17 @@ class TestGameLibrary(unittest.TestCase):
         )
         self.__then_the_correct_message_is_flashed(response, flashed_message)
 
+    def test_logout(self):
+        response = self.__when_the_test_client_calls_a_route("/logout")
+        self.__then_the_page_header_contains_the_correct_text(
+            response, b"<h1>Games</h1>"
+        )
+        self.__then_the_correct_message_is_flashed(
+            response, b"Logout succesful!"
+        )
+
     def __when_the_test_client_calls_a_route(self, route):
-        return self.app.get(route)
+        return self.app.get(route, follow_redirects=True)
 
     def __when_the_test_client_posts_on_a_route(self, route, data):
         return self.app.post(route, data=data, follow_redirects=True)

@@ -42,3 +42,10 @@ def auth() -> Response:
     else:
         flash("User not logged in.")
         return redirect("/login")
+
+
+@bp.route("/logout")
+def logout() -> Response:
+    session["logged_in_user"] = None
+    flash("Logout succesful!")
+    return redirect("/")
