@@ -29,6 +29,10 @@ class GameLibrary(list[Game]):
         self.append(Game("Skyrim", "RPG", "PS3"))
         self.append(Game("Crash Bandicoot", "Platform", "PS1"))
 
+    def create(self, a_name: str, a_genre: str, a_platform: str) -> None:
+        game = Game(a_name, a_genre, a_platform)
+        self.append(game)
+
 
 app = create_app()
 game_library = GameLibrary()
@@ -51,8 +55,7 @@ def create() -> Response:
     name = request.form["name"]
     genre = request.form["genre"]
     platform = request.form["platform"]
-    game = Game(name, genre, platform)
-    game_library.append(game)
+    game_library.create(name, genre, platform)
     return redirect("/")
 
 
