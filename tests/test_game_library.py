@@ -1,10 +1,11 @@
 import unittest
 
-from flaskr.game_library import app
+from flaskr import create_app
 
 
 class TestGameLibrary(unittest.TestCase):
     def setUp(self):
+        app = create_app()
         self.app = app.test_client()
 
     def test_page_header(self):
