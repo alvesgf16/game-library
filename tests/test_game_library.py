@@ -52,26 +52,21 @@ class TestGameLibrary(unittest.TestCase):
         )
 
     def test_succesful_login(self):
-        response = self.__when_the_test_client_posts_on_a_route(
-            "/auth", {"username": "alvesgf16", "password": "alohomora"}
-        )
-        self.__then_the_page_header_contains_the_correct_text(
-            response, b"<h1>Games</h1>"
-        )
-        self.__then_the_correct_message_is_flashed(
-            response, b"alvesgf16 logged in succesfully!"
+        self.login_test(
+            "alohomora", b"<h1>Games</h1>", b"alvesgf16 logged in succesfully!"
         )
 
     def test_unsuccesful_login(self):
+        self.login_test("houston", b"<h1>Login</h1>", b"User not logged in.")
+
+    def login_test(self, password, redirected_page_header, flashed_message):
         response = self.__when_the_test_client_posts_on_a_route(
-            "/auth", {"username": "alvesgf16", "password": "houston"}
+            "/auth", {"username": "alvesgf16", "password": password}
         )
         self.__then_the_page_header_contains_the_correct_text(
-            response, b"<h1>Login</h1>"
+            response, redirected_page_header
         )
-        self.__then_the_correct_message_is_flashed(
-            response, b"User not logged in."
-        )
+        self.__then_the_correct_message_is_flashed(response, flashed_message)
 
     def __when_the_test_client_calls_the_index_route(self):
         return self.app.get("/")
