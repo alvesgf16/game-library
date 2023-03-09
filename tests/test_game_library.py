@@ -54,6 +54,7 @@ class TestGameLibrary(unittest.TestCase):
                 "genre": "MOBA",
                 "platform": "PC",
             },
+            follow_redirects=True
         )
 
     def __then_the_page_header_contains_the_correct_text(
