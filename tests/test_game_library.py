@@ -58,6 +58,9 @@ class TestGameLibrary(unittest.TestCase):
         self.__then_the_page_header_contains_the_correct_text(
             response, b"<h1>Games</h1>"
         )
+        self.__then_the_correct_message_is_flashed(
+            response, b"alvesgf16 logged in succesfully!"
+        )
 
     def test_unsuccesful_login(self):
         response = self.__when_the_test_client_posts_on_a_route(
@@ -66,12 +69,18 @@ class TestGameLibrary(unittest.TestCase):
         self.__then_the_page_header_contains_the_correct_text(
             response, b"<h1>Login</h1>"
         )
+        self.__then_the_correct_message_is_flashed(
+            response, b"User not logged in."
+        )
 
     def __when_the_test_client_calls_the_index_route(self):
         return self.app.get("/")
 
     def __when_the_test_client_posts_on_a_route(self, route, data):
         return self.app.post(route, data=data, follow_redirects=True)
+
+    def __then_the_correct_message_is_flashed(self, response, message):
+        assert message in response.data
 
     def __then_the_page_header_contains_the_correct_text(
         self, response, header_text

@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, render_template, request
+from flask import Blueprint, flash, redirect, render_template, request, session
 from werkzeug import Response
 
 from flaskr.db import game_library
@@ -36,6 +36,9 @@ def login() -> str:
 @bp.route("/auth", methods=["POST"])
 def auth() -> Response:
     if request.form["password"] == "alohomora":
+        session["logged_in_user"] = request.form["username"]
+        flash(session["logged_in_user"] + " logged in succesfully!")
         return redirect("/")
     else:
+        flash("User not logged in.")
         return redirect("/login")
