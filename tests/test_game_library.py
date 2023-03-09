@@ -1,6 +1,6 @@
 import unittest
 
-from game_library import app
+from flaskr.game_library import app
 
 
 class TestGameLibrary(unittest.TestCase):
