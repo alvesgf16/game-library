@@ -1,5 +1,7 @@
-from flask import Flask, redirect, render_template, request
+from flask import redirect, render_template, request
 from werkzeug import Response
+
+from flaskr import create_app
 
 
 class Game:
@@ -28,7 +30,7 @@ class Games(list[Game]):
         self.append(Game("Crash Bandicoot", "Platform", "PS1"))
 
 
-app = Flask(__name__)
+app = create_app()
 games = Games()
 
 
