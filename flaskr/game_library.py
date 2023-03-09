@@ -23,7 +23,7 @@ class Game:
         return self.__platform
 
 
-class Games(list[Game]):
+class GameLibrary(list[Game]):
     def __init__(self) -> None:
         self.append(Game("Tetris", "Puzzle", "Atari"))
         self.append(Game("Skyrim", "RPG", "PS3"))
@@ -31,12 +31,14 @@ class Games(list[Game]):
 
 
 app = create_app()
-games = Games()
+game_library = GameLibrary()
 
 
 @app.route("/")
 def index() -> str:
-    return render_template("index.html", a_title="Games", table_data=games)
+    return render_template(
+        "index.html", a_title="Games", table_data=game_library
+    )
 
 
 @app.route("/form")
@@ -50,7 +52,7 @@ def create() -> Response:
     genre = request.form["genre"]
     platform = request.form["platform"]
     game = Game(name, genre, platform)
-    games.append(game)
+    game_library.append(game)
     return redirect("/")
 
 
