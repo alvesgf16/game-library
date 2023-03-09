@@ -36,7 +36,14 @@ class TestGameLibrary(unittest.TestCase):
         )
 
     def test_game_creation(self):
-        response = self.__when_the_test_client_posts_on_the_create_route()
+        response = self.__when_the_test_client_posts_on_a_route(
+            "/create",
+            {
+                "name": "League of Legends",
+                "genre": "MOBA",
+                "platform": "PC",
+            },
+        )
         self.__then_the_cells_in_a_table_line_contain_the_correct_data(
             response,
             b"<td>League of Legends</td>",
@@ -47,16 +54,8 @@ class TestGameLibrary(unittest.TestCase):
     def __when_the_test_client_calls_the_index_route(self):
         return self.app.get("/")
 
-    def __when_the_test_client_posts_on_the_create_route(self):
-        return self.app.post(
-            "/create",
-            data={
-                "name": "League of Legends",
-                "genre": "MOBA",
-                "platform": "PC",
-            },
-            follow_redirects=True
-        )
+    def __when_the_test_client_posts_on_a_route(self, route, data):
+        return self.app.post(route, data=data, follow_redirects=True)
 
     def __then_the_page_header_contains_the_correct_text(
         self, response, header_text
