@@ -37,13 +37,13 @@ class TestGameLibrary(unittest.TestCase):
 
     def test_form_as_logged_in_user(self):
         self.given_a_logged_in_user()
-        response = self.__when_the_test_client_calls_a_route("/form")
+        response = self.__when_the_test_client_calls_a_route("/create")
         self.__then_the_page_header_contains_the_correct_text(
             response, b"<h1>Create a game</h1>"
         )
 
     def test_form_as_random_user(self):
-        response = self.__when_the_test_client_calls_a_route("/form")
+        response = self.__when_the_test_client_calls_a_route("/create")
         self.__then_the_page_header_contains_the_correct_text(
             response, b"<h1>Login</h1>"
         )
@@ -80,7 +80,7 @@ class TestGameLibrary(unittest.TestCase):
     def test_succesful_login_from_form_page(self):
         self.login_test(
             "alohomora",
-            "form",
+            "create",
             b"<h1>Create a game</h1>",
             b"alvesgf16 logged in succesfully",
         )

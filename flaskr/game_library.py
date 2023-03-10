@@ -22,21 +22,18 @@ def index() -> str:
     )
 
 
-@bp.route("/form")
-def form() -> Union[Response, str]:
+@bp.route("/create", methods=["GET", "POST"])
+def create() -> Union[Response, str]:
+    if request.method == "POST":
+        name = request.form["name"]
+        genre = request.form["genre"]
+        platform = request.form["platform"]
+        game_library.create(name, genre, platform)
+        return redirect(url_for("game_library.index"))
     if "logged_in_user" not in session or session["logged_in_user"] is None:
         return redirect(
             url_for(
-                "auth.login", next_page=url_for("game_library.form")
+                "auth.login", next_page=url_for("game_library.create")
             )
         )
     return render_template("form.html", a_title="Create a game")
-
-
-@bp.route("/create", methods=["POST"])
-def create() -> Response:
-    name = request.form["name"]
-    genre = request.form["genre"]
-    platform = request.form["platform"]
-    game_library.create(name, genre, platform)
-    return redirect(url_for("game_library.index"))
