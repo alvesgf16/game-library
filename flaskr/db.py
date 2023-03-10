@@ -59,5 +59,18 @@ class Users(list[User]):
         return self[user_index]
 
 
-game_library = GameLibrary()
-users = Users()
+class Database:
+    def __init__(self) -> None:
+        self.__game_library = GameLibrary()
+        self.__users = Users()
+
+    @property
+    def game_library(self) -> GameLibrary:
+        return self.__game_library
+
+    @property
+    def users(self) -> Users:
+        return self.__users
+
+
+db = Database()

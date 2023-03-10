@@ -10,7 +10,7 @@ from flask import (
 )
 from werkzeug import Response
 
-from flaskr.db import game_library
+from flaskr.db import db
 
 bp = Blueprint("game_library", __name__)
 
@@ -18,7 +18,7 @@ bp = Blueprint("game_library", __name__)
 @bp.route("/")
 def index() -> str:
     return render_template(
-        "index.html", a_title="Games", table_data=game_library
+        "index.html", a_title="Games", table_data=db.game_library
     )
 
 
@@ -39,7 +39,7 @@ def create_game() -> Response:
     name = request.form["name"]
     genre = request.form["genre"]
     platform = request.form["platform"]
-    game_library.create(name, genre, platform)
+    db.game_library.create(name, genre, platform)
     return redirect(url_for("game_library.index"))
 
 

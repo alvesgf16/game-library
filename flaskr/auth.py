@@ -11,7 +11,7 @@ from flask import (
 )
 from werkzeug import Response
 
-from flaskr.db import users
+from flaskr.db import db
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -25,7 +25,7 @@ def login() -> Union[Response, str]:
 
 def auth(a_username: str) -> Response:
     if is_there_a_user_with_username(a_username):
-        user = users.get_by_username(a_username)
+        user = db.users.get_by_username(a_username)
         if does_password_match(user.password):
             return succesful_user_login(user.username)
     flash("User not logged in.")
@@ -33,7 +33,7 @@ def auth(a_username: str) -> Response:
 
 
 def is_there_a_user_with_username(a_username: str) -> bool:
-    return a_username in [user.username for user in users]
+    return a_username in [user.username for user in db.users]
 
 
 def does_password_match(a_password: str) -> bool:
