@@ -1,6 +1,7 @@
 {% extends "template.html" %}
 {% block content %}
   <form action="/auth" method="post">
+    <input type="hidden" name="next_page" value="{{ next_page }}">
     <p><label for="username">Username:</label><input type="text" name="username" id="username" class="form-control" required></p>
     <p><label for="password">Password:</label><input type="password" name="password" id="password" class="form-control" required></p>
     <p><button type="submit" class="btn btn-primary">Login</button></p>

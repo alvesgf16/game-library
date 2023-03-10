@@ -66,15 +66,35 @@ class TestGameLibrary(unittest.TestCase):
 
     def test_succesful_login(self):
         self.login_test(
-            "alohomora", b"<h1>Games</h1>", b"alvesgf16 logged in succesfully!"
+            "alohomora",
+            "",
+            b"<h1>Games</h1>",
+            b"alvesgf16 logged in succesfully!",
         )
 
     def test_unsuccesful_login(self):
-        self.login_test("houston", b"<h1>Login</h1>", b"User not logged in.")
+        self.login_test(
+            "houston", "", b"<h1>Login</h1>", b"User not logged in."
+        )
 
-    def login_test(self, password, redirected_page_header, flashed_message):
+    def test_succesful_login_from_form_page(self):
+        self.login_test(
+            "alohomora",
+            "form",
+            b"<h1>Create a game</h1>",
+            b"alvesgf16 logged in succesfully",
+        )
+
+    def login_test(
+        self, password, next_page, redirected_page_header, flashed_message
+    ):
         response = self.__when_the_test_client_posts_on_a_route(
-            "/auth", {"username": "alvesgf16", "password": password}
+            "/auth",
+            {
+                "username": "alvesgf16",
+                "password": password,
+                "next_page": next_page,
+            },
         )
         self.__then_the_page_header_contains_the_correct_text(
             response, redirected_page_header
@@ -92,7 +112,12 @@ class TestGameLibrary(unittest.TestCase):
 
     def given_a_logged_in_user(self):
         self.__when_the_test_client_posts_on_a_route(
-            "/auth", {"username": "alvesgf16", "password": "alohomora"}
+            "/auth",
+            {
+                "username": "alvesgf16",
+                "password": "alohomora",
+                "next_page": "",
+            },
         )
 
     def __when_the_test_client_calls_a_route(self, route):
