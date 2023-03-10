@@ -32,16 +32,15 @@ def login() -> Union[Response, str]:
 def succesful_user_login(a_username: str) -> Response:
     set_session_user(a_username)
     flash(f"{a_username} logged in succesfully!")
-    return redirect_to_origin_of_request()
+    return redirect(origin_of_request())
 
 
 def set_session_user(a_username: Union[str, None]) -> None:
     session["logged_in_user"] = a_username
 
 
-def redirect_to_origin_of_request() -> Response:
-    origin = request.form["origin"]
-    return redirect(origin)
+def origin_of_request() -> str:
+    return request.form["origin"]
 
 
 @bp.route("/logout")
