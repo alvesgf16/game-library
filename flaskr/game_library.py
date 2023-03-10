@@ -1,12 +1,20 @@
 from typing import Union
 
-from flask import Blueprint, flash, redirect, render_template, request, session
+from flask import (
+    Blueprint,
+    flash,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from werkzeug import Response
 
 from flaskr.db import game_library
 
 
-bp = Blueprint('game_library', __name__)
+bp = Blueprint("game_library", __name__)
 
 
 @bp.route("/")
@@ -19,7 +27,11 @@ def index() -> str:
 @bp.route("/form")
 def form() -> Union[Response, str]:
     if "logged_in_user" not in session or session["logged_in_user"] is None:
-        return redirect("/login?next_page=form")
+        return redirect(
+            url_for(
+                "game_library.login", next_page=url_for("game_library.form")
+            )
+        )
     return render_template("form.html", a_title="Create a game")
 
 
@@ -29,7 +41,7 @@ def create() -> Response:
     genre = request.form["genre"]
     platform = request.form["platform"]
     game_library.create(name, genre, platform)
-    return redirect("/")
+    return redirect(url_for("game_library.index"))
 
 
 @bp.route("/login")
@@ -43,17 +55,15 @@ def auth() -> Response:
     if request.form["password"] == "alohomora":
         session["logged_in_user"] = request.form["username"]
         flash(session["logged_in_user"] + " logged in succesfully!")
-        next_page = (
-            request.form["next_page"] if "next_page" in request.form else ""
-        )
-        return redirect(f"/{next_page}")
+        next_page = request.form["next_page"]
+        return redirect(next_page)
     else:
         flash("User not logged in.")
-        return redirect("/login")
+        return redirect(url_for("game_library.login"))
 
 
 @bp.route("/logout")
 def logout() -> Response:
     session["logged_in_user"] = None
     flash("Logout succesful!")
-    return redirect("/")
+    return redirect(url_for("game_library.index"))
