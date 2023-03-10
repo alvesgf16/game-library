@@ -25,12 +25,16 @@ def login() -> Union[Response, str]:
 
 
 def auth(a_username: str) -> Response:
-    if a_username in [user.username for user in users]:
+    if is_there_a_user_with_username(a_username):
         user = users.get_by_username(a_username)
         if does_password_match(user.password):
             return succesful_user_login(user.username)
     flash("User not logged in.")
     return redirect(url_for("auth.login"))
+
+
+def is_there_a_user_with_username(a_username: str) -> bool:
+    return a_username in [user.username for user in users]
 
 
 def does_password_match(a_password: str) -> bool:
