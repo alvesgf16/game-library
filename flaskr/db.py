@@ -28,4 +28,36 @@ class GameLibrary(list[Game]):
         self.append(game)
 
 
+class User:
+    def __init__(self, a_name: str, a_username: str, a_password: str) -> None:
+        self.__name = a_name
+        self.__username = a_username
+        self.__password = a_password
+
+    @property
+    def name(self) -> str:
+        return self.__name
+
+    @property
+    def username(self) -> str:
+        return self.__username
+
+    @property
+    def password(self) -> str:
+        return self.__password
+
+
+class Users(list[User]):
+    def __init__(self) -> None:
+        self.append(User("Gabriel Alves", "alvesgf16", "alohomora"))
+        self.append(User("Camilla Bastos", "cams", "paozinho"))
+        self.append(User("Guilherme Ferreira", "cake", "python_eh_vida"))
+
+    def get_by_username(self, a_username: str) -> User:
+        usernames = [user.username for user in self]
+        user_index = usernames.index(a_username)
+        return self[user_index]
+
+
 game_library = GameLibrary()
+users = Users()
