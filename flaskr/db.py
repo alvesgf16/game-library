@@ -17,7 +17,7 @@ class Game:
         return self.__platform
 
 
-class GameLibrary(list[Game]):
+class Games(list[Game]):
     def __init__(self) -> None:
         self.append(Game("Tetris", "Puzzle", "Atari"))
         self.append(Game("Skyrim", "RPG", "PS3"))
@@ -61,12 +61,12 @@ class Users(list[User]):
 
 class Database:
     def __init__(self) -> None:
-        self.__game_library = GameLibrary()
+        self.__games = Games()
         self.__users = Users()
 
     @property
-    def game_library(self) -> GameLibrary:
-        return self.__game_library
+    def games(self) -> Games:
+        return self.__games
 
     @property
     def users(self) -> Users:
