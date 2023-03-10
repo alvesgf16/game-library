@@ -35,7 +35,7 @@ def succesful_user_login(a_username: str) -> Response:
     return redirect_to_origin_of_request()
 
 
-def set_session_user(a_username: str) -> None:
+def set_session_user(a_username: Union[str, None]) -> None:
     session["logged_in_user"] = a_username
 
 
@@ -46,6 +46,6 @@ def redirect_to_origin_of_request() -> Response:
 
 @bp.route("/logout")
 def logout() -> Response:
-    session["logged_in_user"] = None
+    set_session_user(None)
     flash("Logout succesful!")
     return redirect(url_for("game_library.index"))
