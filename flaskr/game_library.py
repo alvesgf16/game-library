@@ -30,10 +30,12 @@ def create() -> Union[Response, str]:
         platform = request.form["platform"]
         game_library.create(name, genre, platform)
         return redirect(url_for("game_library.index"))
-    if is_user_logged_in():
-        return render_template("form.html", a_title="Create a game")
-    return redirect(
-        url_for("auth.login", origin=url_for("game_library.create"))
+    return (
+        render_template("form.html", a_title="Create a game")
+        if is_user_logged_in()
+        else redirect(
+            url_for("auth.login", origin=url_for("game_library.create"))
+        )
     )
 
 
