@@ -86,14 +86,14 @@ class TestGameLibrary(unittest.TestCase):
         )
 
     def login_test(
-        self, password, next_page, redirected_page_header, flashed_message
+        self, password, origin, redirected_page_header, flashed_message
     ):
         response = self.__when_the_test_client_posts_on_a_route(
             "/auth/login",
             {
                 "username": "alvesgf16",
                 "password": password,
-                "next_page": next_page,
+                "origin": origin,
             },
         )
         self.__then_the_page_header_contains_the_correct_text(
@@ -116,7 +116,7 @@ class TestGameLibrary(unittest.TestCase):
             {
                 "username": "alvesgf16",
                 "password": "alohomora",
-                "next_page": "",
+                "origin": "",
             },
         )
 

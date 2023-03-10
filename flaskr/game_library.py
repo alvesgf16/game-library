@@ -33,7 +33,7 @@ def create() -> Union[Response, str]:
     if "logged_in_user" not in session or session["logged_in_user"] is None:
         return redirect(
             url_for(
-                "auth.login", next_page=url_for("game_library.create")
+                "auth.login", origin=url_for("game_library.create")
             )
         )
     return render_template("form.html", a_title="Create a game")

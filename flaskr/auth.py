@@ -32,8 +32,8 @@ def login() -> Union[Response, str]:
 def succesful_user_login(a_username: str) -> Response:
     session["logged_in_user"] = a_username
     flash(f"{a_username} logged in succesfully!")
-    next_page = request.form["next_page"]
-    return redirect(next_page)
+    origin = request.form["origin"]
+    return redirect(origin)
 
 
 @bp.route("/logout")
