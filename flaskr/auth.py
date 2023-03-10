@@ -23,12 +23,8 @@ def login() -> Union[Response, str]:
             user = users.get_by_username(request.form["username"])
             if request.form["password"] == user.password:
                 return succesful_user_login(user.username)
-            else:
-                flash("User not logged in.")
-                return redirect(url_for("auth.login"))
-        else:
-            flash("User not logged in.")
-            return redirect(url_for("auth.login"))
+        flash("User not logged in.")
+        return redirect(url_for("auth.login"))
     next_page = request.args.get("next_page") or ""
     return render_template("login.html", a_title="Login", next_page=next_page)
 
