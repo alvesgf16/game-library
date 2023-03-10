@@ -30,8 +30,12 @@ def login() -> Union[Response, str]:
 
 
 def succesful_user_login(a_username: str) -> Response:
-    session["logged_in_user"] = a_username
+    set_session_user(a_username)
     flash(f"{a_username} logged in succesfully!")
+
+
+def set_session_user(a_username: str) -> None:
+    session["logged_in_user"] = a_username
     origin = request.form["origin"]
     return redirect(origin)
 
