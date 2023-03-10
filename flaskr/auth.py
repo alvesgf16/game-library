@@ -21,12 +21,16 @@ def login() -> Union[Response, str]:
     if request.method == "POST":
         if request.form["username"] in [user.username for user in users]:
             user = users.get_by_username(request.form["username"])
-            if request.form["password"] == user.password:
+            if does_password_match(user.password):
                 return succesful_user_login(user.username)
         flash("User not logged in.")
         return redirect(url_for("auth.login"))
     origin = request.args.get("origin") or ""
     return render_template("login.html", a_title="Login", origin=origin)
+
+
+def does_password_match(a_password: str) -> bool:
+    return request.form["password"] == a_password
 
 
 def succesful_user_login(a_username: str) -> Response:
