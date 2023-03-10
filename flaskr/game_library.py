@@ -30,10 +30,14 @@ def create() -> Union[Response, str]:
         platform = request.form["platform"]
         game_library.create(name, genre, platform)
         return redirect(url_for("game_library.index"))
-    if "logged_in_user" not in session or session["logged_in_user"] is None:
+    if not is_user_logged_in():
         return redirect(
-            url_for(
-                "auth.login", origin=url_for("game_library.create")
-            )
+            url_for("auth.login", origin=url_for("game_library.create"))
         )
     return render_template("form.html", a_title="Create a game")
+
+
+def is_user_logged_in() -> bool:
+    return (
+        "logged_in_user" in session and session["logged_in_user"] is not None
+    )
