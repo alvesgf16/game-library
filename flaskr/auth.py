@@ -20,8 +20,11 @@ bp = Blueprint("auth", __name__, url_prefix="/auth")
 def login() -> Union[Response, str]:
     if request.method == "POST":
         return auth(request.form["username"])
-    origin = request.args.get("origin") or ""
-    return render_template("login.html", a_title="Login", origin=origin)
+    return render_template("login.html", a_title="Login", origin=origin())
+
+
+def origin() -> str:
+    return request.args.get("origin") or ""
 
 
 def auth(a_username: str) -> Response:
