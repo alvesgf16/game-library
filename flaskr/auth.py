@@ -19,15 +19,18 @@ bp = Blueprint("auth", __name__, url_prefix="/auth")
 @bp.route("/login", methods=["GET", "POST"])
 def login() -> Union[Response, str]:
     if request.method == "POST":
-        username = request.form["username"]
-        if username in [user.username for user in users]:
-            user = users.get_by_username(username)
-            if does_password_match(user.password):
-                return succesful_user_login(user.username)
-        flash("User not logged in.")
-        return redirect(url_for("auth.login"))
+        return auth(request.form["username"])
     origin = request.args.get("origin") or ""
     return render_template("login.html", a_title="Login", origin=origin)
+
+
+def auth(a_username: str) -> Response:
+    if a_username in [user.username for user in users]:
+        user = users.get_by_username(a_username)
+        if does_password_match(user.password):
+            return succesful_user_login(user.username)
+    flash("User not logged in.")
+    return redirect(url_for("auth.login"))
 
 
 def does_password_match(a_password: str) -> bool:
