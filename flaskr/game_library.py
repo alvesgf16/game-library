@@ -25,11 +25,7 @@ def index() -> str:
 @bp.route("/create", methods=["GET", "POST"])
 def create() -> Union[Response, str]:
     if request.method == "POST":
-        name = request.form["name"]
-        genre = request.form["genre"]
-        platform = request.form["platform"]
-        game_library.create(name, genre, platform)
-        return redirect(url_for("game_library.index"))
+        return create_game()
     return (
         render_template("form.html", a_title="Create a game")
         if is_user_logged_in()
@@ -37,6 +33,14 @@ def create() -> Union[Response, str]:
             url_for("auth.login", origin=url_for("game_library.create"))
         )
     )
+
+
+def create_game() -> Response:
+    name = request.form["name"]
+    genre = request.form["genre"]
+    platform = request.form["platform"]
+    game_library.create(name, genre, platform)
+    return redirect(url_for("game_library.index"))
 
 
 def is_user_logged_in() -> bool:
