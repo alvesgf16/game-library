@@ -89,7 +89,7 @@ class TestGameLibrary(unittest.TestCase):
         self, password, next_page, redirected_page_header, flashed_message
     ):
         response = self.__when_the_test_client_posts_on_a_route(
-            "/auth",
+            "/login",
             {
                 "username": "alvesgf16",
                 "password": password,
@@ -112,7 +112,7 @@ class TestGameLibrary(unittest.TestCase):
 
     def given_a_logged_in_user(self):
         self.__when_the_test_client_posts_on_a_route(
-            "/auth",
+            "/login",
             {
                 "username": "alvesgf16",
                 "password": "alohomora",
