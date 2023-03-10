@@ -19,8 +19,9 @@ bp = Blueprint("auth", __name__, url_prefix="/auth")
 @bp.route("/login", methods=["GET", "POST"])
 def login() -> Union[Response, str]:
     if request.method == "POST":
-        if request.form["username"] in [user.username for user in users]:
-            user = users.get_by_username(request.form["username"])
+        username = request.form["username"]
+        if username in [user.username for user in users]:
+            user = users.get_by_username(username)
             if does_password_match(user.password):
                 return succesful_user_login(user.username)
         flash("User not logged in.")
