@@ -1,3 +1,5 @@
+from typing import Union
+
 from flask import Blueprint, flash, redirect, render_template, request, session
 from werkzeug import Response
 
@@ -15,7 +17,9 @@ def index() -> str:
 
 
 @bp.route("/form")
-def form() -> str:
+def form() -> Union[Response, str]:
+    if "logged_in_user" not in session or session["logged_in_user"] is None:
+        return redirect("/login")
     return render_template("form.html", a_title="Create a game")
 
 

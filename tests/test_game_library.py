@@ -35,6 +35,19 @@ class TestGameLibrary(unittest.TestCase):
             b"<td>PS1</td>",
         )
 
+    def test_form_as_logged_in_user(self):
+        self.given_a_logged_in_user()
+        response = self.__when_the_test_client_calls_a_route("/form")
+        self.__then_the_page_header_contains_the_correct_text(
+            response, b"<h1>Create a game</h1>"
+        )
+
+    def test_form_as_random_user(self):
+        response = self.__when_the_test_client_calls_a_route("/form")
+        self.__then_the_page_header_contains_the_correct_text(
+            response, b"<h1>Login</h1>"
+        )
+
     def test_game_creation(self):
         response = self.__when_the_test_client_posts_on_a_route(
             "/create",
@@ -75,6 +88,11 @@ class TestGameLibrary(unittest.TestCase):
         )
         self.__then_the_correct_message_is_flashed(
             response, b"Logout succesful!"
+        )
+
+    def given_a_logged_in_user(self):
+        self.__when_the_test_client_posts_on_a_route(
+            "/auth", {"username": "alvesgf16", "password": "alohomora"}
         )
 
     def __when_the_test_client_calls_a_route(self, route):
