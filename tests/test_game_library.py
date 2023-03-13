@@ -1,9 +1,8 @@
-import unittest
-
+from . import TestBase
 from flaskr import create_app
 
 
-class TestGameLibrary(unittest.TestCase):
+class TestGameLibrary(TestBase):
     def setUp(self):
         app = create_app()
         self.app = app.test_client()
