@@ -59,14 +59,8 @@ class TestGameLibrary(TestBase):
         )
 
     def given_a_logged_in_user(self):
-        self._when_the_test_client_posts_on_a_route(
-            "/auth/login",
-            {
-                "username": "alvesgf16",
-                "password": "alohomora",
-                "origin": "",
-            },
-        )
+        with self.app.session_transaction() as mock_session:
+            mock_session["logged_in_user"] = "a_user"
 
     def __then_the_cells_in_a_table_line_contain_the_correct_data(
         self,
