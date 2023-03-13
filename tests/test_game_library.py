@@ -3,19 +3,19 @@ from . import TestBase
 
 class TestGameLibrary(TestBase):
     def test_page_header(self):
-        response = self.__when_the_test_client_calls_a_route("/")
-        self.__then_the_page_header_contains_the_correct_text(
+        response = self._when_the_test_client_calls_a_route("/")
+        self._then_the_page_header_contains_the_correct_text(
             response, b"<h1>Games</h1>"
         )
 
     def test_table_headers(self):
-        response = self.__when_the_test_client_calls_a_route("/")
+        response = self._when_the_test_client_calls_a_route("/")
         self.__then_the_cells_in_a_table_line_contain_the_correct_data(
             response, b"<th>Name</th>", b"<th>Genre</th>", b"<th>Platform</th>"
         )
 
     def test_table_data(self):
-        response = self.__when_the_test_client_calls_a_route("/")
+        response = self._when_the_test_client_calls_a_route("/")
         self.__then_the_cells_in_a_table_line_contain_the_correct_data(
             response, b"<td>Tetris</td>", b"<td>Puzzle</td>", b"<td>Atari</td>"
         )
@@ -31,19 +31,19 @@ class TestGameLibrary(TestBase):
 
     def test_form_as_logged_in_user(self):
         self.given_a_logged_in_user()
-        response = self.__when_the_test_client_calls_a_route("/create")
-        self.__then_the_page_header_contains_the_correct_text(
+        response = self._when_the_test_client_calls_a_route("/create")
+        self._then_the_page_header_contains_the_correct_text(
             response, b"<h1>Create a game</h1>"
         )
 
     def test_form_as_random_user(self):
-        response = self.__when_the_test_client_calls_a_route("/create")
-        self.__then_the_page_header_contains_the_correct_text(
+        response = self._when_the_test_client_calls_a_route("/create")
+        self._then_the_page_header_contains_the_correct_text(
             response, b"<h1>Login</h1>"
         )
 
     def test_game_creation(self):
-        response = self.__when_the_test_client_posts_on_a_route(
+        response = self._when_the_test_client_posts_on_a_route(
             "/create",
             {
                 "name": "League of Legends",
@@ -82,7 +82,7 @@ class TestGameLibrary(TestBase):
     def login_test(
         self, password, origin, redirected_page_header, flashed_message
     ):
-        response = self.__when_the_test_client_posts_on_a_route(
+        response = self._when_the_test_client_posts_on_a_route(
             "/auth/login",
             {
                 "username": "alvesgf16",
@@ -90,14 +90,14 @@ class TestGameLibrary(TestBase):
                 "origin": origin,
             },
         )
-        self.__then_the_page_header_contains_the_correct_text(
+        self._then_the_page_header_contains_the_correct_text(
             response, redirected_page_header
         )
         self.__then_the_correct_message_is_flashed(response, flashed_message)
 
     def test_logout(self):
-        response = self.__when_the_test_client_calls_a_route("/auth/logout")
-        self.__then_the_page_header_contains_the_correct_text(
+        response = self._when_the_test_client_calls_a_route("/auth/logout")
+        self._then_the_page_header_contains_the_correct_text(
             response, b"<h1>Games</h1>"
         )
         self.__then_the_correct_message_is_flashed(
@@ -105,7 +105,7 @@ class TestGameLibrary(TestBase):
         )
 
     def given_a_logged_in_user(self):
-        self.__when_the_test_client_posts_on_a_route(
+        self._when_the_test_client_posts_on_a_route(
             "/auth/login",
             {
                 "username": "alvesgf16",
@@ -114,19 +114,8 @@ class TestGameLibrary(TestBase):
             },
         )
 
-    def __when_the_test_client_calls_a_route(self, route):
-        return self.app.get(route, follow_redirects=True)
-
-    def __when_the_test_client_posts_on_a_route(self, route, data):
-        return self.app.post(route, data=data, follow_redirects=True)
-
     def __then_the_correct_message_is_flashed(self, response, message):
         assert message in response.data
-
-    def __then_the_page_header_contains_the_correct_text(
-        self, response, header_text
-    ):
-        assert header_text in response.data
 
     def __then_the_cells_in_a_table_line_contain_the_correct_data(
         self,
