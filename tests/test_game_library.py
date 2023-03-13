@@ -1,12 +1,7 @@
 from . import TestBase
-from flaskr import create_app
 
 
 class TestGameLibrary(TestBase):
-    def setUp(self):
-        app = create_app()
-        self.app = app.test_client()
-
     def test_page_header(self):
         response = self.__when_the_test_client_calls_a_route("/")
         self.__then_the_page_header_contains_the_correct_text(
