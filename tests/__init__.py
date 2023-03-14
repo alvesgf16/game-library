@@ -5,8 +5,9 @@ from flaskr import create_app
 
 class TestBase(unittest.TestCase):
     def setUp(self):
-        app = create_app()
-        self.client = app.test_client()
+        self.app = create_app()
+        self.client = self.app.test_client()
+        self.runner = self.app.test_cli_runner()
 
     def _when_the_test_client_calls_a_route(self, route):
         return self.client.get(route, follow_redirects=True)
