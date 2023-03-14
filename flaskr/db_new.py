@@ -8,12 +8,12 @@ from mysql.connector import errorcode
 def db_create() -> None:
     print("Connecting...")
     try:
-        connection = mysql.connector.connect(
+        with mysql.connector.connect(
             host="localhost",
             user=env.get("MYSQL_USER"),
-            password=env.get("MYSQL_PASSWORD")
-        )
-        print(connection)
+            password=env.get("MYSQL_PASSWORD"),
+        ) as connection:
+            print(connection)
     except mysql.connector.Error as err:
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
             print("There is something wrong with the username or password")
