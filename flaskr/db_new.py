@@ -13,7 +13,10 @@ def db_create() -> None:
             user=env.get("MYSQL_USER"),
             password=env.get("MYSQL_PASSWORD"),
         ) as connection:
-            print(connection)
+            with connection.cursor() as cursor:
+                cursor.execute("DROP DATABASE IF EXISTS `game_library`;")
+                cursor.execute("CREATE DATABASE `game_library`;")
+                cursor.execute("USE `game_library`;")
     except mysql.connector.Error as err:
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
             print("There is something wrong with the username or password")
