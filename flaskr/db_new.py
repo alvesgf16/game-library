@@ -47,8 +47,7 @@ def db_create() -> None:
             password=env.get("MYSQL_PASSWORD"),
         ) as connection:
             with connection.cursor() as cursor:
-                create_database(cursor)
-                create_tables(cursor)
+                DatabaseCreator(cursor)
     except mysql.connector.Error as err:
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
             print("There is something wrong with the username or password")
@@ -58,21 +57,26 @@ def db_create() -> None:
             print(err)
 
 
-def create_database(a_cursor: MySQLCursorAbstract) -> None:
-    a_cursor.execute("DROP DATABASE IF EXISTS `game_library`;")
-    a_cursor.execute("CREATE DATABASE `game_library`;")
-    a_cursor.execute("USE `game_library`;")
+class DatabaseCreator:
+    def __init__(self, a_cursor: MySQLCursorAbstract) -> None:
+        self.cursor = a_cursor
 
+        self.create_database()
+        self.create_tables()
 
-def create_tables(a_cursor: MySQLCursorAbstract) -> None:
-    for table in tables:
-        create_table(table, a_cursor)
+    def create_database(self) -> None:
+        self.cursor.execute("DROP DATABASE IF EXISTS `game_library`;")
+        self.cursor.execute("CREATE DATABASE `game_library`;")
+        self.cursor.execute("USE `game_library`;")
 
+    def create_tables(self) -> None:
+        for table in tables:
+            self.create_table(table)
 
-def create_table(a_table: Table, a_cursor: MySQLCursorAbstract) -> None:
-    print(f"Creating table {a_table.name}:", end=" ")
-    a_cursor.execute(a_table.creation_query)
-    print("OK")
+    def create_table(self, a_table: Table) -> None:
+        print(f"Creating table {a_table.name}:", end=" ")
+        self.cursor.execute(a_table.creation_query)
+        print("OK")
 
 
 @click.command("db-create")
