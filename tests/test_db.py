@@ -22,3 +22,11 @@ class TestDb(TestBase):
             )
             result = self.runner.invoke(args=["db-create"])
             assert "something wrong" in result.output
+
+    def test_db_create_table_already_exists(self):
+        with patch("mysql.connector.connect") as mock_connect:
+            mock_connect.side_effect = mysql.connector.Error(
+                errno=errorcode.ER_TABLE_EXISTS_ERROR
+            )
+            result = self.runner.invoke(args=["db-create"])
+            assert "Table already exists" in result.output
