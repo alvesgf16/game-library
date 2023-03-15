@@ -6,7 +6,7 @@ from flaskr.db_commands.utils import (
     create_exception_message,
     DatabaseOperator,
     Table,
-    tables
+    tables,
 )
 
 
@@ -19,13 +19,16 @@ def db_create_command() -> None:
 def db_create() -> None:
     try:
         with DatabaseOperator() as db_operator:
-            DatabaseCreator(db_operator)
+            DatabaseCreator("game_library", db_operator)
     except mysql.connector.Error as e:
         create_exception_message(e)
 
 
 class DatabaseCreator:
-    def __init__(self, a_cursor: MySQLCursorAbstract) -> None:
+    def __init__(
+        self, a_database_name: str, a_cursor: MySQLCursorAbstract
+    ) -> None:
+        self.database = a_database_name
         self.cursor = a_cursor
 
         self.create_database()
@@ -33,9 +36,9 @@ class DatabaseCreator:
         print("Database created.")
 
     def create_database(self) -> None:
-        self.cursor.execute("DROP DATABASE IF EXISTS `game_library`;")
-        self.cursor.execute("CREATE DATABASE `game_library`;")
-        self.cursor.execute("USE `game_library`;")
+        self.cursor.execute(f"DROP DATABASE IF EXISTS `{self.database}`;")
+        self.cursor.execute(f"CREATE DATABASE `{self.database}`;")
+        self.cursor.execute(f"USE `{self.database}`;")
 
     def create_tables(self) -> None:
         for table in tables:
