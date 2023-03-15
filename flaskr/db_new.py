@@ -28,7 +28,7 @@ CREATE TABLE `users` (
 
 class Table:
     def __init__(self, a_name: str, a_creation_query: str) -> None:
-        self.name = (a_name,)
+        self.name = a_name
         self.creation_query = a_creation_query
 
 
