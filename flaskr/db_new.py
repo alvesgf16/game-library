@@ -74,7 +74,7 @@ class DatabaseCreator:
 
         self.create_database()
         self.create_tables()
-        print("Initialized the database.")
+        print("Database created.")
 
     def create_database(self) -> None:
         self.cursor.execute("DROP DATABASE IF EXISTS `game_library`;")
