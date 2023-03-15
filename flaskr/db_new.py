@@ -28,18 +28,6 @@ CREATE TABLE `users` (
 """
 
 
-class Table:
-    def __init__(self, a_name: str, a_creation_query: str) -> None:
-        self.name = a_name
-        self.creation_query = a_creation_query
-
-
-tables = [
-    Table(USERS, USERS_TABLE_CREATION_QUERY),
-    Table(GAMES, GAMES_TABLE_CREATION_QUERY)
-]
-
-
 def db_create() -> None:
     try:
         with DatabaseOperator() as db_operator:
@@ -73,6 +61,12 @@ class DatabaseOperator:
         self.connection.close()
 
 
+class Table:
+    def __init__(self, a_name: str, a_creation_query: str) -> None:
+        self.name = a_name
+        self.creation_query = a_creation_query
+
+
 class DatabaseCreator:
     def __init__(self, a_cursor: MySQLCursorAbstract) -> None:
         self.cursor = a_cursor
@@ -86,6 +80,10 @@ class DatabaseCreator:
         self.cursor.execute("USE `game_library`;")
 
     def create_tables(self) -> None:
+        tables = [
+            Table(USERS, USERS_TABLE_CREATION_QUERY),
+            Table(GAMES, GAMES_TABLE_CREATION_QUERY)
+        ]
         for table in tables:
             self.create_table(table)
 
