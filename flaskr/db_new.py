@@ -1,4 +1,6 @@
 from os import environ as env
+from types import TracebackType
+from typing import Type
 
 import click
 import mysql.connector
@@ -40,13 +42,8 @@ tables = [
 
 def db_create() -> None:
     try:
-        with mysql.connector.connect(
-            host="localhost",
-            user=env.get("MYSQL_USER"),
-            password=env.get("MYSQL_PASSWORD"),
-        ) as connection:
-            with connection.cursor() as cursor:
-                DatabaseCreator(cursor)
+        with DatabaseOperator() as db_operator:
+            DatabaseCreator(db_operator)
     except mysql.connector.Error as err:
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
             print("There is something wrong with the username or password")
@@ -54,6 +51,26 @@ def db_create() -> None:
             print("Table already exists")
         else:
             print(err)
+
+
+class DatabaseOperator:
+    def __enter__(self) -> MySQLCursorAbstract:
+        self.connection = mysql.connector.connect(
+            host="localhost",
+            user=env.get("MYSQL_USER"),
+            password=env.get("MYSQL_PASSWORD"),
+        )
+        self.cursor = self.connection.cursor()
+        return self.cursor
+
+    def __exit__(
+        self,
+        exc_type: Type[BaseException],
+        exc_value: BaseException,
+        traceback: TracebackType,
+    ) -> None:
+        self.cursor.close()
+        self.connection.close()
 
 
 class DatabaseCreator:
