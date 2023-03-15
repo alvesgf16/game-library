@@ -8,7 +8,7 @@ from mysql.connector.abstracts import MySQLCursorAbstract
 GAMES = "games"
 GAMES_TABLE_CREATION_QUERY = """
 CREATE TABLE `games` (
-    `id` int(11) NOT NULL AUTO_INCREMENT
+    `id` int(11) NOT NULL AUTO_INCREMENT,
     `name` varchar(50) NOT NULL,
     `genre` varchar(40) NOT NULL,
     `platform` varchar(20) NOT NULL,
