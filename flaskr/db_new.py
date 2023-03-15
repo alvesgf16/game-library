@@ -39,13 +39,17 @@ def db_create() -> None:
     try:
         with DatabaseOperator() as db_operator:
             DatabaseCreator(db_operator)
-    except mysql.connector.Error as err:
-        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-            print("There is something wrong with the username or password")
-        if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
-            print("Table already exists")
-        else:
-            print(err)
+    except mysql.connector.Error as e:
+        create_exception_message(e)
+
+
+def create_exception_message(an_error: mysql.connector.Error) -> None:
+    if an_error.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+        print("There is something wrong with the username or password")
+    elif an_error.errno == errorcode.ER_TABLE_EXISTS_ERROR:
+        print("Table already exists")
+    else:
+        print(an_error)
 
 
 class DatabaseOperator:
