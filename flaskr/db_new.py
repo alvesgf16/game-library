@@ -39,7 +39,6 @@ tables = [
 
 
 def db_create() -> None:
-    print("Connecting...")
     try:
         with mysql.connector.connect(
             host="localhost",
@@ -81,5 +80,6 @@ class DatabaseCreator:
 
 @click.command("db-create")
 def db_create_command() -> None:
+    print("Connecting...")
     db_create()
     click.echo("Initialized the database.")
