@@ -12,7 +12,7 @@ class TestDb(TestBase):
             mock_connection = MagicMock()
             mock_connect.return_value = mock_connection
             result = self.runner.invoke(args=["db-create"])
-            assert "Initialized" in result.output
+            assert "created" in result.output
             assert mock_connect.called
 
     def test_db_create_access_denied(self):
