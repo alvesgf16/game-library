@@ -43,15 +43,6 @@ def db_create() -> None:
         create_exception_message(e)
 
 
-def create_exception_message(an_error: mysql.connector.Error) -> None:
-    if an_error.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-        print("There is something wrong with the username or password")
-    elif an_error.errno == errorcode.ER_TABLE_EXISTS_ERROR:
-        print("Table already exists")
-    else:
-        print(an_error)
-
-
 class DatabaseOperator:
     def __enter__(self) -> MySQLCursorAbstract:
         self.connection = mysql.connector.connect(
@@ -102,3 +93,12 @@ class DatabaseCreator:
         print(f"Creating table {a_table.name}:", end=" ")
         self.cursor.execute(a_table.creation_query)
         print("OK")
+
+
+def create_exception_message(an_error: mysql.connector.Error) -> None:
+    if an_error.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+        print("There is something wrong with the username or password")
+    elif an_error.errno == errorcode.ER_TABLE_EXISTS_ERROR:
+        print("Table already exists")
+    else:
+        print(an_error)
