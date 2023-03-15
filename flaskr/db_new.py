@@ -28,6 +28,13 @@ CREATE TABLE `users` (
 """
 
 
+@click.command("db-create")
+def db_create_command() -> None:
+    print("Connecting...")
+    db_create()
+    click.echo("Initialized the database.")
+
+
 def db_create() -> None:
     try:
         with DatabaseOperator() as db_operator:
@@ -91,10 +98,3 @@ class DatabaseCreator:
         print(f"Creating table {a_table.name}:", end=" ")
         self.cursor.execute(a_table.creation_query)
         print("OK")
-
-
-@click.command("db-create")
-def db_create_command() -> None:
-    print("Connecting...")
-    db_create()
-    click.echo("Initialized the database.")
