@@ -8,7 +8,10 @@ from mysql.connector.abstracts import MySQLCursorAbstract
 
 
 class DatabaseOperator:
-    def __init__(self, is_transactional: bool = False) -> None:
+    def __init__(
+        self, database: str = "", is_transactional: bool = False
+    ) -> None:
+        self.database = database
         self.is_transactional = is_transactional
 
     def __enter__(self) -> MySQLCursorAbstract:
@@ -16,6 +19,7 @@ class DatabaseOperator:
             host="localhost",
             user=env.get("MYSQL_USER"),
             password=env.get("MYSQL_PASSWORD"),
+            database=self.database,
         )
         self.cursor = self.connection.cursor()
         return self.cursor
