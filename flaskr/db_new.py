@@ -32,7 +32,6 @@ CREATE TABLE `users` (
 def db_create_command() -> None:
     print("Connecting...")
     db_create()
-    click.echo("Initialized the database.")
 
 
 def db_create() -> None:
@@ -75,6 +74,7 @@ class DatabaseCreator:
 
         self.create_database()
         self.create_tables()
+        print("Initialized the database.")
 
     def create_database(self) -> None:
         self.cursor.execute("DROP DATABASE IF EXISTS `game_library`;")
