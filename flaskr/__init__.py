@@ -1,7 +1,7 @@
 from flask import Flask
 
 from . import auth, game_library
-from .db_new import db_create_command
+from .db_commands import db_create_command
 
 
 def create_app() -> Flask:
