@@ -8,6 +8,9 @@ from mysql.connector.abstracts import MySQLCursorAbstract
 
 
 class DatabaseOperator:
+    def __init__(self, is_transactional: bool = False) -> None:
+        self.is_transactional = is_transactional
+
     def __enter__(self) -> MySQLCursorAbstract:
         self.connection = mysql.connector.connect(
             host="localhost",
@@ -23,5 +26,7 @@ class DatabaseOperator:
         exc_value: BaseException,
         traceback: TracebackType,
     ) -> None:
+        if self.is_transactional:
+            self.connection.commit()
         self.cursor.close()
         self.connection.close()
