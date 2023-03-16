@@ -4,7 +4,6 @@ from urllib.parse import quote
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-from . import auth, game_library
 from .db_commands import db_create_command, db_seed_command
 
 mysql_user = env.get("MYSQL_USER") or "root"
@@ -25,6 +24,7 @@ def create_app() -> Flask:
             database="game_library",
         )
     )
+    from . import auth, game_library
     app.register_blueprint(auth.bp)
     app.register_blueprint(game_library.bp)
     app.cli.add_command(db_create_command)
