@@ -37,11 +37,12 @@ def create() -> Union[Response, str]:
 
 
 def create_game() -> Response:
-    name = request.form["name"]
-    genre = request.form["genre"]
-    platform = request.form["platform"]
-    game = Games(name=name, genre=genre, platform=platform)
-    if is_there_a_game_with_name(game):
+    game = Games(
+        name=request.form["name"],
+        genre=request.form["genre"],
+        platform=request.form["platform"],
+    )
+    if is_game_duplicated(game):
         flash("Game already exists!")
     else:
         add_game_to_database(game)
