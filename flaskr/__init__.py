@@ -14,20 +14,26 @@ db = SQLAlchemy()
 
 def create_app() -> Flask:
     app = Flask(__name__)
+
     app.secret_key = "alura"
-    app.config["SQLALCHEMY_DATABASE_URI"] = (
-        "{DBMS}://{username}:{password}@{server}/{database}".format(
-            DBMS="mysql+mysqlconnector",
-            username=quote(mysql_user),
-            password=quote(mysql_password),
-            server="localhost",
-            database="game_library",
-        )
+    app.config[
+        "SQLALCHEMY_DATABASE_URI"
+    ] = "{DBMS}://{username}:{password}@{server}/{database}".format(
+        DBMS="mysql+mysqlconnector",
+        username=quote(mysql_user),
+        password=quote(mysql_password),
+        server="localhost",
+        database="game_library",
     )
+
     db.init_app(app)
-    from . import auth, game_library
-    app.register_blueprint(auth.bp)
-    app.register_blueprint(game_library.bp)
+
     app.cli.add_command(db_create_command)
     app.cli.add_command(db_seed_command)
+
+    from . import auth, game_library
+
+    app.register_blueprint(auth.bp)
+    app.register_blueprint(game_library.bp)
+
     return app
