@@ -40,10 +40,11 @@ def create_game() -> Response:
     name = request.form["name"]
     genre = request.form["genre"]
     platform = request.form["platform"]
+    game = Games(name=name, genre=genre, platform=platform)
     if is_there_a_game_with_name(name):
         flash("Game already exists!")
     else:
-        add_game_to_database(Games(name=name, genre=genre, platform=platform))
+        add_game_to_database(game)
     return redirect(url_for("game_library.index"))
 
 
