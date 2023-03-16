@@ -2,12 +2,15 @@ from os import environ as env
 from urllib.parse import quote
 
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
 from . import auth, game_library
 from .db_commands import db_create_command, db_seed_command
 
 mysql_user = env.get("MYSQL_USER") or "root"
 mysql_password = env.get("MYSQL_PASSWORD") or ""
+
+db = SQLAlchemy()
 
 
 def create_app() -> Flask:
