@@ -4,7 +4,6 @@ from urllib.parse import quote
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-from .db_commands import db_create_command, db_seed_command
 
 db = SQLAlchemy()
 
@@ -16,6 +15,8 @@ def create_app() -> Flask:
     app.config["SQLALCHEMY_DATABASE_URI"] = db_uri()
 
     db.init_app(app)
+
+    from .db_commands import db_create_command, db_seed_command
 
     app.cli.add_command(db_create_command)
     app.cli.add_command(db_seed_command)
