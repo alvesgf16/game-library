@@ -24,6 +24,7 @@ def create_app() -> Flask:
             database="game_library",
         )
     )
+    db.init_app(app)
     from . import auth, game_library
     app.register_blueprint(auth.bp)
     app.register_blueprint(game_library.bp)
