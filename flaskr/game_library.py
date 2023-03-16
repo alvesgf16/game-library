@@ -1,7 +1,8 @@
-from typing import Union
+from typing import Optional, Union
 
 from flask import (
     Blueprint,
+    flash,
     redirect,
     render_template,
     request,
@@ -19,9 +20,7 @@ bp = Blueprint("game_library", __name__)
 @bp.route("/")
 def index() -> str:
     games = db.session.execute(db.select(Games).order_by(Games.name)).scalars()
-    return render_template(
-        "index.html", a_title="Games", table_data=games
-    )
+    return render_template("index.html", a_title="Games", table_data=games)
 
 
 @bp.route("/create", methods=["GET", "POST"])
@@ -41,10 +40,22 @@ def create_game() -> Response:
     name = request.form["name"]
     genre = request.form["genre"]
     platform = request.form["platform"]
-    game = Games(name=name, genre=genre, platform=platform)
-    db.session.add(game)
-    db.session.commit()
+    if is_there_a_game_with_name(name):
+        flash("Game already exists!")
+    else:
+        add_game_to_database(Games(name=name, genre=genre, platform=platform))
     return redirect(url_for("game_library.index"))
+
+
+def is_there_a_game_with_name(a_name: str) -> Optional[Games]:
+    return db.session.execute(
+        db.select(Games).filter_by(name=a_name)
+    ).scalar()
+
+
+def add_game_to_database(a_game: Games) -> None:
+    db.session.add(a_game)
+    db.session.commit()
 
 
 def is_user_logged_in() -> bool:
