@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Optional, Union
 
 from flask import (
     Blueprint,
@@ -11,7 +11,8 @@ from flask import (
 )
 from werkzeug import Response
 
-from flaskr.db_old import db_old
+from flaskr import db
+from flaskr.db_new import Users
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -24,16 +25,17 @@ def login() -> Union[Response, str]:
 
 
 def auth(a_username: str) -> Response:
-    if is_there_a_user_with_username(a_username):
-        user = db_old.users.get_by_username(a_username)
+    if user := is_there_a_user_with_username(a_username):
         if does_password_match(user.password):
             return succesful_user_login(user.username)
     flash("User not logged in.")
     return redirect(url_for("auth.login"))
 
 
-def is_there_a_user_with_username(a_username: str) -> bool:
-    return a_username in [user.username for user in db_old.users]
+def is_there_a_user_with_username(a_username: str) -> Optional[Users]:
+    return db.session.execute(
+        db.select(Users).filter_by(username=a_username)
+    ).scalar()
 
 
 def does_password_match(a_password: str) -> bool:
