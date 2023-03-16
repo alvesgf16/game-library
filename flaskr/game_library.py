@@ -41,16 +41,16 @@ def create_game() -> Response:
     genre = request.form["genre"]
     platform = request.form["platform"]
     game = Games(name=name, genre=genre, platform=platform)
-    if is_there_a_game_with_name(name):
+    if is_there_a_game_with_name(game):
         flash("Game already exists!")
     else:
         add_game_to_database(game)
     return redirect(url_for("game_library.index"))
 
 
-def is_there_a_game_with_name(a_name: str) -> Optional[Games]:
+def is_game_duplicated(a_game: Games) -> Optional[Games]:
     return db.session.execute(
-        db.select(Games).filter_by(name=a_name)
+        db.select(Games).filter_by(name=a_game.name)
     ).scalar()
 
 
