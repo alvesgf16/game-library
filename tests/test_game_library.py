@@ -20,13 +20,7 @@ class TestGameLibrary(TestBase):
             response, b"<td>Tetris</td>", b"<td>Puzzle</td>", b"<td>Atari</td>"
         )
         self.__then_the_cells_in_a_table_line_contain_the_correct_data(
-            response, b"<td>Skyrim</td>", b"<td>PS3</td>", b"<td>RPG</td>"
-        )
-        self.__then_the_cells_in_a_table_line_contain_the_correct_data(
-            response,
-            b"<td>Crash Bandicoot</td>",
-            b"<td>Platform</td>",
-            b"<td>PS1</td>",
+            response, b"<td>Valorant</td>", b"<td>FPS</td>", b"<td>PC</td>"
         )
 
     def test_form_as_logged_in_user(self):
