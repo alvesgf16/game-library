@@ -12,7 +12,7 @@ from flask import (
 from werkzeug import Response
 
 from flaskr import db
-from flaskr.db_new import Users
+from flaskr.auth.models import User
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -32,9 +32,9 @@ def auth(a_username: str) -> Response:
     return redirect(url_for("auth.login"))
 
 
-def is_there_a_user_with_username(a_username: str) -> Optional[Users]:
+def is_there_a_user_with_username(a_username: str) -> Optional[User]:
     return db.session.execute(
-        db.select(Users).filter_by(username=a_username)
+        db.select(User).filter_by(username=a_username)
     ).scalar()
 
 

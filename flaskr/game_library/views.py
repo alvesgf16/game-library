@@ -12,14 +12,14 @@ from flask import (
 from werkzeug import Response
 
 from flaskr import db
-from flaskr.db_new import Games
+from flaskr.game_library.models import Game
 
 bp = Blueprint("game_library", __name__)
 
 
 @bp.route("/")
 def index() -> str:
-    games = db.session.execute(db.select(Games).order_by(Games.name)).scalars()
+    games = db.session.execute(db.select(Game).order_by(Game.name)).scalars()
     return render_template("index.html", a_title="Games", table_data=games)
 
 
@@ -37,7 +37,7 @@ def create() -> Union[Response, str]:
 
 
 def create_game() -> Response:
-    game = Games(
+    game = Game(
         name=request.form["name"],
         genre=request.form["genre"],
         platform=request.form["platform"],
@@ -49,13 +49,13 @@ def create_game() -> Response:
     return redirect(url_for("game_library.index"))
 
 
-def is_game_duplicated(a_game: Games) -> Optional[Games]:
+def is_game_duplicated(a_game: Game) -> Optional[Game]:
     return db.session.execute(
-        db.select(Games).filter_by(name=a_game.name)
+        db.select(Game).filter_by(name=a_game.name)
     ).scalar()
 
 
-def add_game_to_database(a_game: Games) -> None:
+def add_game_to_database(a_game: Game) -> None:
     db.session.add(a_game)
     db.session.commit()
 
