@@ -16,11 +16,7 @@ def create_app() -> Flask:
 
     db.init_app(app)
     add_cli_commands(app)
-
-    from . import auth, game_library
-
-    app.register_blueprint(auth.bp)
-    app.register_blueprint(game_library.bp)
+    register_blueprints(app)
 
     return app
 
@@ -30,6 +26,13 @@ def add_cli_commands(app: Flask) -> None:
 
     app.cli.add_command(db_create_command)
     app.cli.add_command(db_seed_command)
+
+
+def register_blueprints(app: Flask) -> None:
+    from . import auth, game_library
+
+    app.register_blueprint(auth.bp)
+    app.register_blueprint(game_library.bp)
 
 
 def db_uri() -> str:
