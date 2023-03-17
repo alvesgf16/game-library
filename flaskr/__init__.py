@@ -15,11 +15,7 @@ def create_app() -> Flask:
     app.config["SQLALCHEMY_DATABASE_URI"] = db_uri()
 
     db.init_app(app)
-
-    from .db_commands import db_create_command, db_seed_command
-
-    app.cli.add_command(db_create_command)
-    app.cli.add_command(db_seed_command)
+    add_cli_commands(app)
 
     from . import auth, game_library
 
@@ -27,6 +23,13 @@ def create_app() -> Flask:
     app.register_blueprint(game_library.bp)
 
     return app
+
+
+def add_cli_commands(app: Flask) -> None:
+    from .db_commands import db_create_command, db_seed_command
+
+    app.cli.add_command(db_create_command)
+    app.cli.add_command(db_seed_command)
 
 
 def db_uri() -> str:
