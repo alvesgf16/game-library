@@ -5,14 +5,14 @@ from . import TestBase
 
 class TestDb(TestBase):
     def test_db_create(self):
-        self.base_db_command_test("db_create", "db-create", "created")
+        self.base_db_command_test("db-create", "created")
 
     def test_db_seed(self):
-        self.base_db_command_test("db_seed", "db-seed", "seeding complete")
+        self.base_db_command_test("db-seed", "seeding complete")
 
-    def base_db_command_test(self, a_command_func, a_command, expected_text):
+    def base_db_command_test(self, a_command, expected_text):
         with self.app.app_context():
-            self.__given_a_mocked_command_function(a_command_func)
+            self.__given_a_mocked_command_function(a_command.replace("-", "_"))
             result = self.__when_a_command_is_invoked(a_command)
             self.__then_the_correct_message_is_displayed(result, expected_text)
 
