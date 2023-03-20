@@ -14,6 +14,7 @@
         <td>{{ data.name }}</td>
         <td>{{ data.genre }}</td>
         <td>{{ data.platform }}</td>
+        <td><a href="{{ url_for('game_library.update', id=data.id) }}">Edit</a></td>
       </tr>
       {% endfor %}
     </tbody>

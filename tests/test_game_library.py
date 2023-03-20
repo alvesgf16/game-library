@@ -23,14 +23,12 @@ class TestGameLibrary(TestBase):
             response, b"<td>Valorant</td>", b"<td>FPS</td>", b"<td>PC</td>"
         )
 
-    def test_form_as_logged_in_user(self):
-        self.given_a_logged_in_user()
-        response = self._when_the_test_client_calls_a_route("/create")
-        self._then_the_page_header_contains_the_correct_text(
-            response, b"<h1>Create a game</h1>"
+    def test_create_as_logged_in_user(self):
+        self.page_header_for_logged_in_user_test(
+            "/create", b"<h1>Create a game</h1>"
         )
 
-    def test_form_as_random_user(self):
+    def test_create_as_random_user(self):
         response = self._when_the_test_client_calls_a_route("/create")
         self._then_the_page_header_contains_the_correct_text(
             response, b"<h1>Login</h1>"
@@ -50,6 +48,26 @@ class TestGameLibrary(TestBase):
             b"<td>League of Legends</td>",
             b"<td>MOBA</td>",
             b"<td>PC</td>",
+        )
+
+    def test_update_as_logged_in_user(self):
+        self.page_header_for_logged_in_user_test(
+            "/update/1", b"<h1>Updating a game</h1>"
+        )
+
+    def page_header_for_logged_in_user_test(
+        self, a_route, header_text
+    ):
+        self.given_a_logged_in_user()
+        response = self._when_the_test_client_calls_a_route(a_route)
+        self._then_the_page_header_contains_the_correct_text(
+            response, header_text
+        )
+
+    def test_update_as_random_user(self):
+        response = self._when_the_test_client_calls_a_route("/update/1")
+        self._then_the_page_header_contains_the_correct_text(
+            response, b"<h1>Login</h1>"
         )
 
     def given_a_logged_in_user(self):

@@ -66,3 +66,20 @@ def is_user_logged_in() -> bool:
     return (
         "logged_in_user" in session and session["logged_in_user"] is not None
     )
+
+
+@bp.route("/update/<int:id>", methods=["GET"])
+def update(id: int) -> Union[Response, str]:
+    game = db.session.execute(db.select(Game).filter_by(id=id)).scalar()
+    assert isinstance(game, Game)
+    return (
+        render_template(
+            "game_library/update.html", a_title="Updating a game", game=game
+        )
+        if is_user_logged_in()
+        else redirect(
+            url_for(
+                "auth.login", origin=url_for("game_library.update", id=game.id)
+            )
+        )
+    )
