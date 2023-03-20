@@ -68,10 +68,12 @@ def is_user_logged_in() -> bool:
     )
 
 
-@bp.route("/update/<int:id>", methods=["GET"])
+@bp.route("/update/<int:id>", methods=["GET", "POST"])
 def update(id: int) -> Union[Response, str]:
     game = db.session.execute(db.select(Game).filter_by(id=id)).scalar()
     assert isinstance(game, Game)
+    if request.method == "POST":
+        return update_game(game)
     return (
         render_template(
             "game_library/update.html", a_title="Updating a game", game=game
@@ -83,3 +85,12 @@ def update(id: int) -> Union[Response, str]:
             )
         )
     )
+
+
+def update_game(a_game: Game) -> Response:
+    a_game.name = request.form["name"]
+    a_game.genre = request.form["genre"]
+    a_game.platform = request.form["platform"]
+    db.session.commit()
+
+    return redirect(url_for("game_library.index"))

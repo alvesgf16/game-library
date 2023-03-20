@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
-  <form method="post">
+  <form action="{{ url_for('game_library.update', id=game.id)}}" method="post">
     <fieldset>
+      <input type="hidden" name="id" value="{{ game.id }}">
       <div class="form-group">
         <label for="name">Name</label>
         <input type="text" name="name" id="name" class="form-control" value="{{ game.name }}">

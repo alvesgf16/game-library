@@ -70,6 +70,22 @@ class TestGameLibrary(TestBase):
             response, b"<h1>Login</h1>"
         )
 
+    def test_game_update(self):
+        response = self._when_the_test_client_posts_on_a_route(
+            "/update/3",
+            {
+                "name": "Crash Bandicoot",
+                "genre": "Platform",
+                "platform": "PS1",
+            },
+        )
+        self.__then_the_cells_in_a_table_line_contain_the_correct_data(
+            response,
+            b"<td>Crash Bandicoot</td>",
+            b"<td>Platform</td>",
+            b"<td>PS1</td>",
+        )
+
     def given_a_logged_in_user(self):
         with self.client.session_transaction() as mock_session:
             mock_session["logged_in_user"] = "a_user"
