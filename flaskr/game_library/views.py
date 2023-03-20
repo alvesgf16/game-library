@@ -20,7 +20,9 @@ bp = Blueprint("game_library", __name__)
 @bp.route("/")
 def index() -> str:
     games = db.session.execute(db.select(Game).order_by(Game.name)).scalars()
-    return render_template("index.html", a_title="Games", table_data=games)
+    return render_template(
+        "game_library/index.html", a_title="Games", table_data=games
+    )
 
 
 @bp.route("/create", methods=["GET", "POST"])
@@ -28,7 +30,7 @@ def create() -> Union[Response, str]:
     if request.method == "POST":
         return create_game()
     return (
-        render_template("form.html", a_title="Create a game")
+        render_template("game_library/create.html", a_title="Create a game")
         if is_user_logged_in()
         else redirect(
             url_for("auth.login", origin=url_for("game_library.create"))
