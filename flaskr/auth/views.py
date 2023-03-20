@@ -24,6 +24,10 @@ def login() -> Union[Response, str]:
     return render_template("login.html", a_title="Login", origin=origin())
 
 
+def origin() -> str:
+    return request.args.get("origin") or ""
+
+
 def auth(a_username: str) -> Response:
     if user := is_there_a_user_with_username(a_username):
         if does_password_match(user.password):
@@ -61,7 +65,3 @@ def logout() -> Response:
     set_session_user(None)
     flash("Logout succesful!")
     return redirect(url_for("game_library.index"))
-
-
-def origin() -> str:
-    return request.args.get("origin") or ""
