@@ -72,7 +72,7 @@ class TestGameLibrary(TestBase):
 
     def test_game_update(self):
         response = self._when_the_test_client_posts_on_a_route(
-            "/update/3",
+            "/update/5",
             {
                 "name": "Crash Bandicoot",
                 "genre": "Platform",
@@ -85,6 +85,17 @@ class TestGameLibrary(TestBase):
             b"<td>Platform</td>",
             b"<td>PS1</td>",
         )
+
+    def test_delete_as_random_user(self):
+        response = self._when_the_test_client_calls_a_route("/delete/1")
+        self._then_the_page_header_contains_the_correct_text(
+            response, b"<h1>Login</h1>"
+        )
+
+    def test_delete_as_logged_in_user(self):
+        self.given_a_logged_in_user()
+        response = self._when_the_test_client_calls_a_route("/delete/6")
+        self.__then_the_deleted_game_is_not_in_the_page(response)
 
     def given_a_logged_in_user(self):
         with self.client.session_transaction() as mock_session:
@@ -100,3 +111,6 @@ class TestGameLibrary(TestBase):
         assert name_cell in response.data
         assert genre_cell in response.data
         assert platform_cell in response.data
+
+    def __then_the_deleted_game_is_not_in_the_page(self, response):
+        assert b"<td>Need for Speed</td>" not in response.data

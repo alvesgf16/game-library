@@ -15,6 +15,7 @@
         <td>{{ data.genre }}</td>
         <td>{{ data.platform }}</td>
         <td><a href="{{ url_for('game_library.update', id=data.id) }}">Edit</a></td>
+        <td><a href="{{ url_for('game_library.delete', id=data.id) }}">Delete</a></td>
       </tr>
       {% endfor %}
     </tbody>

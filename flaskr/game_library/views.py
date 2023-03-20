@@ -94,3 +94,15 @@ def update_game(a_game: Game) -> Response:
     db.session.commit()
 
     return redirect(url_for("game_library.index"))
+
+
+@bp.route("/delete/<int:id>")
+def delete(id: int) -> Response:
+    if is_user_logged_in():
+        game = db.session.execute(db.select(Game).filter_by(id=id)).scalar()
+        db.session.delete(game)
+        db.session.commit()
+        flash("Game deleted successfully!")
+        return redirect(url_for("game_library.index"))
+    else:
+        return redirect(url_for("auth.login"))
