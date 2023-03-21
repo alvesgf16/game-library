@@ -11,6 +11,9 @@ class TestBase(unittest.TestCase):
         self.runner.invoke(args=["db-create"])
         self.runner.invoke(args=["db-seed"])
 
+    def tearDown(self):
+        self.runner.invoke(args=["db-drop"])
+
     def _when_the_test_client_calls_a_route(self, route):
         return self.client.get(route, follow_redirects=True)
 
