@@ -11,13 +11,12 @@ class TestDb(TestBase):
         self.base_db_command_test("db-seed", "seeding complete")
 
     def base_db_command_test(self, a_command, expected_text):
-        with self.app.app_context():
-            command_patch = self.__given_a_patched_command_function(
-                a_command.replace("-", "_")
-            )
-            result = self.__when_a_command_is_invoked(a_command)
-            self.__then_the_correct_message_is_displayed(result, expected_text)
-            self.__then_the_command_function_is_called(command_patch)
+        command_patch = self.__given_a_patched_command_function(
+            a_command.replace("-", "_")
+        )
+        result = self.__when_a_command_is_invoked(a_command)
+        self.__then_the_correct_message_is_displayed(result, expected_text)
+        self.__then_the_command_function_is_called(command_patch)
 
     def __given_a_patched_command_function(self, a_command_func):
         command_patcher = patch(
