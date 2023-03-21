@@ -8,6 +8,8 @@ class TestBase(unittest.TestCase):
         self.app = create_app()
         self.client = self.app.test_client()
         self.runner = self.app.test_cli_runner()
+        self.runner.invoke(args=["db-create"])
+        self.runner.invoke(args=["db-seed"])
 
     def _when_the_test_client_calls_a_route(self, route):
         return self.client.get(route, follow_redirects=True)
