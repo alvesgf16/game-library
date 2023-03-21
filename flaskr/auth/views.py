@@ -29,10 +29,13 @@ def origin() -> str:
 
 
 def auth(a_username: str) -> Response:
-    if user := is_there_a_user_with_username(a_username):
-        if does_password_match(user.password):
-            return succesful_user_login(user.username)
-    flash("User not logged in.")
+    user = is_there_a_user_with_username(a_username)
+    if user is None:
+        flash("Incorrect username.")
+    elif not does_password_match(user.password):
+        flash("Incorrect password.")
+    else:
+        return succesful_user_login(user.username)
     return redirect(url_for("auth.login"))
 
 

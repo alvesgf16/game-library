@@ -4,19 +4,34 @@ from . import TestBase
 class TestAuth(TestBase):
     def test_succesful_login(self):
         self.login_test(
+            "alvesgf16",
             "alohomora",
             "",
             b"<h1>Games</h1>",
             b"alvesgf16 logged in succesfully!",
         )
 
-    def test_unsuccesful_login(self):
+    def test_login_with_invalid_username(self):
         self.login_test(
-            "houston", "", b"<h1>Login</h1>", b"User not logged in."
+            "sheldor",
+            "alohomora",
+            "",
+            b"<h1>Login</h1>",
+            b"Incorrect username.",
+        )
+
+    def test_login_with_invalid_password(self):
+        self.login_test(
+            "alvesgf16",
+            "houston",
+            "",
+            b"<h1>Login</h1>",
+            b"Incorrect password.",
         )
 
     def test_succesful_login_from_form_page(self):
         self.login_test(
+            "alvesgf16",
             "alohomora",
             "create",
             b"<h1>Create a game</h1>",
@@ -24,12 +39,17 @@ class TestAuth(TestBase):
         )
 
     def login_test(
-        self, password, origin, redirected_page_header, flashed_message
+        self,
+        username,
+        password,
+        origin,
+        redirected_page_header,
+        flashed_message,
     ):
         response = self._when_the_test_client_posts_on_a_route(
             "/auth/login",
             {
-                "username": "alvesgf16",
+                "username": username,
                 "password": password,
                 "origin": origin,
             },
