@@ -38,6 +38,5 @@ def db_seed_command() -> None:
 
 
 def db_seed() -> None:
-    for value in seeding_values:
-        db.session.add(value)
+    db.session.add_all(seeding_values)
     db.session.commit()
