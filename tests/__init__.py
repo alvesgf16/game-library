@@ -8,6 +8,7 @@ class TestBase(unittest.TestCase):
         self.app = create_app()
         self.client = self.app.test_client()
         self.runner = self.app.test_cli_runner()
+        self.auth = AuthActions(self.client)
         self.runner.invoke(args=["db-create"])
         self.runner.invoke(args=["db-seed"])
 
@@ -24,3 +25,24 @@ class TestBase(unittest.TestCase):
         self, response, header_text
     ):
         assert header_text in response.data
+
+
+class AuthActions:
+    def __init__(self, a_client):
+        self._client = a_client
+
+    def login(
+        self, a_username="alvesgf16", a_password="alohomora", an_origin=""
+    ):
+        return self._client.post(
+            "/auth/login",
+            data={
+                "username": a_username,
+                "password": a_password,
+                "origin": an_origin,
+            },
+            follow_redirects=True,
+        )
+
+    def logout(self):
+        return self._client.get("/auth/logout")

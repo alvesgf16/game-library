@@ -1,72 +1,51 @@
 from . import TestBase
 
+from flask import session
+
 
 class TestAuth(TestBase):
     def test_succesful_login(self):
-        self.login_test(
-            "alvesgf16",
-            "alohomora",
-            "",
-            b"<h1>Games</h1>",
-            b"alvesgf16 logged in succesfully!",
-        )
-
-    def test_login_with_invalid_username(self):
-        self.login_test(
-            "sheldor",
-            "alohomora",
-            "",
-            b"<h1>Login</h1>",
-            b"Incorrect username.",
-        )
-
-    def test_login_with_invalid_password(self):
-        self.login_test(
-            "alvesgf16",
-            "houston",
-            "",
-            b"<h1>Login</h1>",
-            b"Incorrect password.",
-        )
-
-    def test_succesful_login_from_form_page(self):
-        self.login_test(
-            "alvesgf16",
-            "alohomora",
-            "create",
-            b"<h1>Create a game</h1>",
-            b"alvesgf16 logged in succesfully",
-        )
-
-    def login_test(
-        self,
-        username,
-        password,
-        origin,
-        redirected_page_header,
-        flashed_message,
-    ):
-        response = self._when_the_test_client_posts_on_a_route(
-            "/auth/login",
-            {
-                "username": username,
-                "password": password,
-                "origin": origin,
-            },
-        )
-        self._then_the_page_header_contains_the_correct_text(
-            response, redirected_page_header
-        )
-        self.__then_the_correct_message_is_flashed(response, flashed_message)
-
-    def test_logout(self):
-        response = self._when_the_test_client_calls_a_route("/auth/logout")
+        response = self.auth.login()
         self._then_the_page_header_contains_the_correct_text(
             response, b"<h1>Games</h1>"
         )
         self.__then_the_correct_message_is_flashed(
-            response, b"Logout succesful!"
+            response, b"alvesgf16 logged in succesfully!"
         )
+
+    def test_login_with_invalid_username(self):
+        response = self.auth.login(a_username="sheldor")
+        self._then_the_page_header_contains_the_correct_text(
+            response, b"<h1>Login</h1>"
+        )
+        self.__then_the_correct_message_is_flashed(
+            response, b"Incorrect username."
+        )
+
+    def test_login_with_invalid_password(self):
+        response = self.auth.login(a_password="houston")
+        self._then_the_page_header_contains_the_correct_text(
+            response, b"<h1>Login</h1>"
+        )
+        self.__then_the_correct_message_is_flashed(
+            response, b"Incorrect password."
+        )
+
+    def test_succesful_login_from_form_page(self):
+        response = self.auth.login(an_origin="create")
+        self._then_the_page_header_contains_the_correct_text(
+            response, b"<h1>Create a game</h1>"
+        )
+        self.__then_the_correct_message_is_flashed(
+            response, b"alvesgf16 logged in succesfully"
+        )
+
+    def test_logout(self):
+        self.auth.login()
+
+        with self.client:
+            self.auth.logout()
+            assert "logged_in_user" not in session
 
     def __then_the_correct_message_is_flashed(self, response, message):
         assert message in response.data
