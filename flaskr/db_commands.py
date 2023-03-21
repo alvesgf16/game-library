@@ -19,6 +19,18 @@ seeding_values = [
 ]
 
 
+@click.command("db-create")
+def db_create_command() -> None:
+    click.echo("Connecting...")
+    db_create()
+    click.echo("Database created.")
+
+
+def db_create() -> None:
+    db.drop_all()
+    db.create_all()
+
+
 @click.command("db-seed")
 def db_seed_command() -> None:
     db_seed()

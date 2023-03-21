@@ -21,7 +21,7 @@ class TestDb(TestBase):
 
     def __given_a_patched_command_function(self, a_command_func):
         command_patcher = patch(
-            f"flaskr.db_commands.{a_command_func}.{a_command_func}"
+            f"flaskr.db_commands.{a_command_func}"
         )
         mock_command = command_patcher.start()
         return command_patcher, mock_command
