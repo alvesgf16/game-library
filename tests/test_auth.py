@@ -6,17 +6,15 @@ from flask import session
 class TestAuth(TestBase):
     def test_succesful_login(self):
         response = self.auth.login()
-        self._then_the_page_header_contains_the_correct_text(
-            response, b"<h1>Games</h1>"
-        )
+        self.__then_the_user_is_redirected_to_the_correct_page(response, "/")
         self.__then_the_correct_message_is_flashed(
             response, b"alvesgf16 logged in succesfully!"
         )
 
     def test_login_with_invalid_username(self):
         response = self.auth.login(a_username="sheldor")
-        self._then_the_page_header_contains_the_correct_text(
-            response, b"<h1>Login</h1>"
+        self.__then_the_user_is_redirected_to_the_correct_page(
+            response, "/auth/login"
         )
         self.__then_the_correct_message_is_flashed(
             response, b"Incorrect username."
@@ -24,8 +22,8 @@ class TestAuth(TestBase):
 
     def test_login_with_invalid_password(self):
         response = self.auth.login(a_password="houston")
-        self._then_the_page_header_contains_the_correct_text(
-            response, b"<h1>Login</h1>"
+        self.__then_the_user_is_redirected_to_the_correct_page(
+            response, "/auth/login"
         )
         self.__then_the_correct_message_is_flashed(
             response, b"Incorrect password."
@@ -33,8 +31,8 @@ class TestAuth(TestBase):
 
     def test_succesful_login_from_form_page(self):
         response = self.auth.login(an_origin="create")
-        self._then_the_page_header_contains_the_correct_text(
-            response, b"<h1>Create a game</h1>"
+        self.__then_the_user_is_redirected_to_the_correct_page(
+            response, "/create"
         )
         self.__then_the_correct_message_is_flashed(
             response, b"alvesgf16 logged in succesfully"
@@ -46,6 +44,11 @@ class TestAuth(TestBase):
         with self.client:
             self.auth.logout()
             assert "logged_in_user" not in session
+
+    def __then_the_user_is_redirected_to_the_correct_page(
+        self, response, a_path
+    ):
+        assert response.request.path == a_path
 
     def __then_the_correct_message_is_flashed(self, response, message):
         assert message in response.data
