@@ -56,6 +56,7 @@ def succesful_user_login(a_username: str) -> Response:
 
 
 def set_session_user(a_username: Union[str, None]) -> None:
+    session.clear()
     session["logged_in_user"] = a_username
 
 
