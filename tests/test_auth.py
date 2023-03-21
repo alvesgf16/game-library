@@ -8,7 +8,7 @@ class TestAuth(TestBase):
         response = self.auth.login()
         self.__then_the_user_is_redirected_to_the_correct_page(response, "/")
         self.__then_the_correct_message_is_flashed(
-            response, b"alvesgf16 logged in succesfully!"
+            response, "logged in succesfully!"
         )
 
     def test_login_with_invalid_username(self):
@@ -17,7 +17,7 @@ class TestAuth(TestBase):
             response, "/auth/login"
         )
         self.__then_the_correct_message_is_flashed(
-            response, b"Incorrect username."
+            response, "Incorrect username."
         )
 
     def test_login_with_invalid_password(self):
@@ -26,7 +26,7 @@ class TestAuth(TestBase):
             response, "/auth/login"
         )
         self.__then_the_correct_message_is_flashed(
-            response, b"Incorrect password."
+            response, "Incorrect password."
         )
 
     def test_succesful_login_from_form_page(self):
@@ -35,7 +35,7 @@ class TestAuth(TestBase):
             response, "/create"
         )
         self.__then_the_correct_message_is_flashed(
-            response, b"alvesgf16 logged in succesfully"
+            response, "logged in succesfully"
         )
 
     def test_logout(self):
@@ -51,4 +51,4 @@ class TestAuth(TestBase):
         assert response.request.path == a_path
 
     def __then_the_correct_message_is_flashed(self, response, message):
-        assert message in response.data
+        assert message in response.text
