@@ -40,3 +40,13 @@ def db_seed_command() -> None:
 def db_seed() -> None:
     db.session.add_all(seeding_values)
     db.session.commit()
+
+
+@click.command("db-drop")
+def db_drop_command() -> None:
+    db_drop()
+    click.echo("Database dropped.")
+
+
+def db_drop() -> None:
+    db.drop_all()

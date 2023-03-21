@@ -7,6 +7,9 @@ class TestDb(TestBase):
     def test_db_create(self):
         self.base_db_command_test("db-create", "created")
 
+    def test_db_drop(self):
+        self.base_db_command_test("db-drop", "dropped")
+
     def test_db_seed(self):
         self.base_db_command_test("db-seed", "seeding complete")
 

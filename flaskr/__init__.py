@@ -17,9 +17,14 @@ def create_app() -> Flask:
 
 
 def add_cli_commands(app: Flask) -> None:
-    from .db_commands import db_create_command, db_seed_command
+    from .db_commands import (
+        db_create_command,
+        db_drop_command,
+        db_seed_command,
+    )
 
     app.cli.add_command(db_create_command)
+    app.cli.add_command(db_drop_command)
     app.cli.add_command(db_seed_command)
 
 
