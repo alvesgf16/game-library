@@ -27,7 +27,6 @@ def db_create_command() -> None:
 
 
 def db_create() -> None:
-    db.drop_all()
     db.create_all()
 
 
