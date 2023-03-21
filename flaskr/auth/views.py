@@ -55,9 +55,10 @@ def succesful_user_login(a_username: str) -> Response:
     return redirect(origin_of_request())
 
 
-def set_session_user(a_username: Union[str, None]) -> None:
+def set_session_user(a_username: Optional[str]) -> None:
     session.clear()
-    session["logged_in_user"] = a_username
+    if a_username:
+        session["logged_in_user"] = a_username
 
 
 def origin_of_request() -> str:
