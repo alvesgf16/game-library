@@ -10,47 +10,39 @@ class TestBase(unittest.TestCase):
         self.app = create_app()
         with self.app.app_context():
             db_create()
-            db.session.add_all(
-                [
-                    User(
-                        name="Gabriel Alves",
-                        username="alvesgf16",
-                        password="alohomora",
-                    ),
-                    User(
-                        name="Camilla Bastos",
-                        username="caaaaaams",
-                        password="paozinho",
-                    ),
-                    User(
-                        name="Guilherme Ferreira",
-                        username="cake",
-                        password="python_eh_vida",
-                    ),
-                    Game(name="Tetris", genre="Puzzle", platform="Atari"),
-                    Game(
-                        name="God of War",
-                        genre="Hack 'n' Slash",
-                        platform="PS2",
-                    ),
-                    Game(
-                        name="Mortal Kombat", genre="Fighting", platform="PS2"
-                    ),
-                    Game(name="Valorant", genre="FPS", platform="PC"),
-                    Game(
-                        name="Crash Bandicoot",
-                        genre="Hack 'n' Slash",
-                        platform="PS2",
-                    ),
-                    Game(
-                        name="Need for Speed", genre="Racing", platform="PS2"
-                    ),
-                ]
-            )
+            db.session.add_all(self.seeding_values)
             db.session.commit()
         self.client = self.app.test_client()
         self.runner = self.app.test_cli_runner()
         self.auth = AuthActions(self.client)
+
+    @property
+    def seeding_values(self):
+        return [
+            User(
+                name="Gabriel Alves",
+                username="alvesgf16",
+                password="alohomora",
+            ),
+            User(
+                name="Camilla Bastos",
+                username="caaaaaams",
+                password="paozinho",
+            ),
+            User(
+                name="Guilherme Ferreira",
+                username="cake",
+                password="python_eh_vida",
+            ),
+            Game(name="Tetris", genre="Puzzle", platform="Atari"),
+            Game(name="God of War", genre="Hack 'n' Slash", platform="PS2"),
+            Game(name="Mortal Kombat", genre="Fighting", platform="PS2"),
+            Game(name="Valorant", genre="FPS", platform="PC"),
+            Game(
+                name="Crash Bandicoot", genre="Hack 'n' Slash", platform="PS2"
+            ),
+            Game(name="Need for Speed", genre="Racing", platform="PS2"),
+        ]
 
     def _when_the_test_client_calls_a_route(self, route):
         return self.client.get(route, follow_redirects=True)
