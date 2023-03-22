@@ -1,3 +1,5 @@
+import click
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
@@ -17,15 +19,7 @@ def create_app() -> Flask:
 
 
 def add_cli_commands(app: Flask) -> None:
-    from .db_commands import (
-        db_create_command,
-        db_drop_command,
-        db_seed_command,
-    )
-
     app.cli.add_command(db_create_command)
-    app.cli.add_command(db_drop_command)
-    app.cli.add_command(db_seed_command)
 
 
 def register_blueprints(app: Flask) -> None:
@@ -33,3 +27,15 @@ def register_blueprints(app: Flask) -> None:
 
     app.register_blueprint(auth.bp)
     app.register_blueprint(game_library.bp)
+
+
+@click.command("db-create")
+def db_create_command() -> None:
+    click.echo("Connecting...")
+    db_create()
+    click.echo("Database created.")
+
+
+def db_create() -> None:
+    db.drop_all()
+    db.create_all()

@@ -5,26 +5,13 @@ from . import TestBase
 
 class TestDb(TestBase):
     def test_db_create(self):
-        self.base_db_command_test("db-create", "created")
-
-    def test_db_drop(self):
-        self.base_db_command_test("db-drop", "dropped")
-
-    def test_db_seed(self):
-        self.base_db_command_test("db-seed", "seeding complete")
-
-    def base_db_command_test(self, a_command, expected_text):
-        command_patch = self.__given_a_patched_command_function(
-            a_command.replace("-", "_")
-        )
-        result = self.__when_a_command_is_invoked(a_command)
-        self.__then_the_correct_message_is_displayed(result, expected_text)
+        command_patch = self.__given_a_patched_command_function("db_create")
+        result = self.__when_a_command_is_invoked("db-create")
+        self.__then_the_correct_message_is_displayed(result, "created")
         self.__then_the_command_function_is_called(command_patch)
 
     def __given_a_patched_command_function(self, a_command_func):
-        command_patcher = patch(
-            f"flaskr.db_commands.{a_command_func}"
-        )
+        command_patcher = patch(f"flaskr.{a_command_func}")
         mock_command = command_patcher.start()
         return command_patcher, mock_command
 
