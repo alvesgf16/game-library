@@ -17,6 +17,12 @@ from flaskr.auth.models import User
 bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 
+def is_user_logged_in() -> bool:
+    return (
+        "logged_in_user" in session and session["logged_in_user"] is not None
+    )
+
+
 @bp.route("/login", methods=["GET", "POST"])
 def login() -> Union[Response, str]:
     if request.method == "POST":

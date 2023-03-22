@@ -6,12 +6,12 @@ from flask import (
     redirect,
     render_template,
     request,
-    session,
     url_for,
 )
 from werkzeug import Response
 
 from flaskr import db
+from flaskr.auth.views import is_user_logged_in
 from flaskr.game_library.models import Game
 
 bp = Blueprint("game_library", __name__)
@@ -60,12 +60,6 @@ def is_game_duplicated(a_game: Game) -> Optional[Game]:
 def add_game_to_database(a_game: Game) -> None:
     db.session.add(a_game)
     db.session.commit()
-
-
-def is_user_logged_in() -> bool:
-    return (
-        "logged_in_user" in session and session["logged_in_user"] is not None
-    )
 
 
 @bp.route("/update/<int:id>", methods=["GET", "POST"])
