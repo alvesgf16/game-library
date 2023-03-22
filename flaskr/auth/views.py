@@ -1,4 +1,5 @@
-from typing import Optional, Union
+import functools
+from typing import Callable, Optional, Union
 
 from flask import (
     Blueprint,
@@ -15,6 +16,22 @@ from flaskr import db
 from flaskr.auth.models import User
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
+
+
+def login_required(
+    view: Callable[..., Union[Response, str]]
+) -> Callable[..., Union[Response, str]]:
+    @functools.wraps(view)
+    def wrapped_view(
+        **kwargs: Optional[dict[str, int]]
+    ) -> Union[Response, str]:
+        return (
+            view(**kwargs)
+            if is_user_logged_in()
+            else redirect(url_for("auth.login"))
+        )
+
+    return wrapped_view
 
 
 def is_user_logged_in() -> bool:
