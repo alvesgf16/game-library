@@ -45,10 +45,10 @@ class TestAuth(TestBase):
             self.auth.logout()
             assert "logged_in_user" not in session
 
+    def __then_the_correct_message_is_flashed(self, response, message):
+        assert message in response.text
+
     def __then_the_user_is_redirected_to_the_correct_page(
         self, response, a_path
     ):
         assert response.request.path == a_path
-
-    def __then_the_correct_message_is_flashed(self, response, message):
-        assert message in response.text
