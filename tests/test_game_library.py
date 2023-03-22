@@ -35,6 +35,7 @@ class TestGameLibrary(TestBase):
         )
 
     def test_game_creation(self):
+        self.auth.login()
         response = self._when_the_test_client_posts_on_a_route(
             "/create",
             {
@@ -58,7 +59,7 @@ class TestGameLibrary(TestBase):
     def page_header_for_logged_in_user_test(
         self, a_route, header_text
     ):
-        self.given_a_logged_in_user()
+        self.auth.login()
         response = self._when_the_test_client_calls_a_route(a_route)
         self._then_the_page_header_contains_the_correct_text(
             response, header_text
@@ -71,6 +72,7 @@ class TestGameLibrary(TestBase):
         )
 
     def test_game_update(self):
+        self.auth.login()
         response = self._when_the_test_client_posts_on_a_route(
             "/update/5",
             {
@@ -93,13 +95,9 @@ class TestGameLibrary(TestBase):
         )
 
     def test_delete_as_logged_in_user(self):
-        self.given_a_logged_in_user()
+        self.auth.login()
         response = self._when_the_test_client_calls_a_route("/delete/6")
         self.__then_the_deleted_game_is_not_in_the_page(response)
-
-    def given_a_logged_in_user(self):
-        with self.client.session_transaction() as mock_session:
-            mock_session["logged_in_user"] = "a_user"
 
     def __then_the_cells_in_a_table_line_contain_the_correct_data(
         self,
