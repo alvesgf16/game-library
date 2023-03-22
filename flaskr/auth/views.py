@@ -35,9 +35,7 @@ def login_required(
 
 
 def is_user_logged_in() -> bool:
-    return (
-        "logged_in_user" in session and session["logged_in_user"] is not None
-    )
+    return "logged_in_user" in session
 
 
 @bp.route("/login", methods=["GET", "POST"])
