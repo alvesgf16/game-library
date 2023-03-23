@@ -1,3 +1,6 @@
+import io
+from unittest.mock import patch
+
 from . import TestBase
 
 
@@ -36,20 +39,22 @@ class TestGameLibrary(TestBase):
 
     def test_game_creation(self):
         self.auth.login()
-        response = self.__when_the_test_client_posts_on_a_route(
-            "/create",
-            {
-                "name": "League of Legends",
-                "genre": "MOBA",
-                "platform": "PC",
-            },
-        )
-        self.__then_the_cells_in_a_table_line_contain_the_correct_data(
-            response,
-            b"<td>League of Legends</td>",
-            b"<td>MOBA</td>",
-            b"<td>PC</td>",
-        )
+        with patch("werkzeug.datastructures.FileStorage.save"):
+            response = self.__when_the_test_client_posts_on_a_route(
+                "/create",
+                {
+                    "cover-art": (io.BytesIO(b"abcdef"), "test.jpg"),
+                    "name": "League of Legends",
+                    "genre": "MOBA",
+                    "platform": "PC",
+                },
+            )
+            self.__then_the_cells_in_a_table_line_contain_the_correct_data(
+                response,
+                b"<td>League of Legends</td>",
+                b"<td>MOBA</td>",
+                b"<td>PC</td>",
+            )
 
     def test_update_as_logged_in_user(self):
         self._page_header_for_logged_in_user_test(
@@ -90,9 +95,7 @@ class TestGameLibrary(TestBase):
         response = self.__when_the_test_client_calls_a_route("/delete/6")
         self.__then_the_deleted_game_is_not_in_the_page(response)
 
-    def _page_header_for_logged_in_user_test(
-        self, a_route, header_text
-    ):
+    def _page_header_for_logged_in_user_test(self, a_route, header_text):
         self.auth.login()
         response = self.__when_the_test_client_calls_a_route(a_route)
         self.__then_the_page_header_contains_the_correct_text(
@@ -103,7 +106,12 @@ class TestGameLibrary(TestBase):
         return self.client.get(route, follow_redirects=True)
 
     def __when_the_test_client_posts_on_a_route(self, route, data):
-        return self.client.post(route, data=data, follow_redirects=True)
+        return self.client.post(
+            route,
+            data=data,
+            follow_redirects=True,
+            content_type="multipart/form-data",
+        )
 
     def __then_the_cells_in_a_table_line_contain_the_correct_data(
         self,

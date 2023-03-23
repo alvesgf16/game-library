@@ -1,4 +1,4 @@
-from os import environ as env
+from os import environ as env, path
 from urllib.parse import quote
 
 SECRET_KEY = "alura"
@@ -11,3 +11,4 @@ SQLALCHEMY_DATABASE_URI = (
         database="game_library",
     )
 )
+UPLOAD_PATH = f"{path.dirname(path.abspath(__file__))}/uploads"

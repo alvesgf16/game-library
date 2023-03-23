@@ -2,13 +2,15 @@ from typing import Optional, Union
 
 from flask import (
     Blueprint,
+    current_app,
     flash,
     redirect,
     render_template,
     request,
     url_for,
 )
-from werkzeug import Response
+from werkzeug import Request, Response
+from werkzeug.datastructures import FileStorage
 
 from flaskr import db
 from flaskr.auth.views import login_required
@@ -34,27 +36,39 @@ def create() -> Union[Response, str]:
 
 
 def create_game() -> Response:
-    game = Game(
-        name=request.form["name"],
-        genre=request.form["genre"],
-        platform=request.form["platform"],
-    )
-    if is_game_duplicated(game):
+    if is_game_with_name_in_database(request.form["name"]):
         flash("Game already exists!")
     else:
-        add_game_to_database(game)
+        create_game_from_data(request)
     return redirect(url_for("game_library.index"))
 
 
-def is_game_duplicated(a_game: Game) -> Optional[Game]:
+def is_game_with_name_in_database(a_name: str) -> Optional[Game]:
     return db.session.execute(
-        db.select(Game).filter_by(name=a_game.name)
+        db.select(Game).filter_by(name=a_name)
     ).scalar()
+
+
+def create_game_from_data(a_request: Request) -> None:
+    game = Game(
+        name=a_request.form["name"],
+        genre=a_request.form["genre"],
+        platform=a_request.form["platform"],
+    )
+    cover_art = a_request.files["cover-art"]
+
+    add_game_to_database(game)
+    add_cover_to_uploads(cover_art, game.id)
 
 
 def add_game_to_database(a_game: Game) -> None:
     db.session.add(a_game)
     db.session.commit()
+
+
+def add_cover_to_uploads(a_cover_art: FileStorage, a_game_id: int):
+    upload_path = current_app.config["UPLOAD_PATH"]
+    a_cover_art.save(f"{upload_path}/cover{a_game_id}.jpg")
 
 
 @bp.route("/update/<int:id>", methods=["GET", "POST"])
