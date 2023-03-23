@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Union
 
 from flask import (
     Blueprint,
@@ -43,10 +43,10 @@ def create_game() -> Response:
     return redirect(url_for("game_library.index"))
 
 
-def is_game_with_name_in_database(a_name: str) -> Optional[Game]:
-    return db.session.execute(
+def is_game_with_name_in_database(a_name: str) -> bool:
+    return bool(db.session.execute(
         db.select(Game).filter_by(name=a_name)
-    ).scalar()
+    ).scalar())
 
 
 def create_game_from_data(a_request: Request) -> None:
