@@ -3,9 +3,11 @@ from typing import Optional, Union
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 
 db = SQLAlchemy()
+migrate = Migrate()
 
 
 def create_app(
@@ -18,6 +20,7 @@ def create_app(
         app.config.update(test_config)
 
     db.init_app(app)
+    migrate.init_app(app, db)
     add_cli_commands(app)
     register_blueprints(app)
 
