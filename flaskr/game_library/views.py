@@ -7,6 +7,7 @@ from flask import (
     redirect,
     render_template,
     request,
+    send_from_directory,
     url_for,
 )
 from werkzeug import Request, Response
@@ -100,3 +101,8 @@ def delete(id: int) -> Response:
     db.session.commit()
     flash("Game deleted successfully!")
     return redirect(url_for("game_library.index"))
+
+
+@bp.route("/uploads/<filename>")
+def image(filename: str) -> Response:
+    return send_from_directory("uploads", filename)
