@@ -28,7 +28,7 @@ def login_required(
         return (
             view(**kwargs)
             if is_user_logged_in()
-            else redirect(url_for("auth.login"))
+            else redirect(url_for("auth.login", origin=request.path))
         )
 
     return wrapped_view
