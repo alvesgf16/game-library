@@ -1,3 +1,4 @@
+import os
 import time
 
 from flask import current_app
@@ -14,3 +15,19 @@ class GameCoverUploader:
         a_cover_art.save(
             f"{self.upload_path}/cover{self.game_id}-{timestamp}.jpg"
         )
+
+    def retrieve_uploaded_cover_filename(self) -> str:
+        uploaded_files = os.listdir(self.upload_path)
+        return next(
+            (
+                filename
+                for filename in uploaded_files
+                if f"cover{self.game_id}" in filename
+            ),
+            "default_cover.jpg",
+        )
+
+    def delete_cover_file(self) -> None:
+        filename = self.retrieve_uploaded_cover_filename()
+        if filename != "default_cover.jpg":
+            os.remove(os.path.join(self.upload_path, filename))
