@@ -5,6 +5,12 @@ from . import TestBase
 
 
 class TestGameLibrary(TestBase):
+    def setUp(self):
+        super().setUp()
+        uploader_patcher = patch("werkzeug.datastructures.FileStorage.save")
+        uploader_patcher.start()
+        self.addCleanup(uploader_patcher.stop)
+
     def test_page_header(self):
         response = self.__when_the_test_client_calls_a_route("/")
         self.__then_the_page_header_contains_the_correct_text(
@@ -39,22 +45,21 @@ class TestGameLibrary(TestBase):
 
     def test_game_creation(self):
         self.auth.login()
-        with patch("werkzeug.datastructures.FileStorage.save"):
-            response = self.__when_the_test_client_posts_on_a_route(
-                "/create",
-                {
-                    "cover-art": (io.BytesIO(b"abcdef"), "test.jpg"),
-                    "name": "League of Legends",
-                    "genre": "MOBA",
-                    "platform": "PC",
-                },
-            )
-            self.__then_the_cells_in_a_table_line_contain_the_correct_data(
-                response,
-                b"<td>League of Legends</td>",
-                b"<td>MOBA</td>",
-                b"<td>PC</td>",
-            )
+        response = self.__when_the_test_client_posts_on_a_route(
+            "/create",
+            {
+                "cover-art": (io.BytesIO(b"abcdef"), "test.jpg"),
+                "name": "League of Legends",
+                "genre": "MOBA",
+                "platform": "PC",
+            },
+        )
+        self.__then_the_cells_in_a_table_line_contain_the_correct_data(
+            response,
+            b"<td>League of Legends</td>",
+            b"<td>MOBA</td>",
+            b"<td>PC</td>",
+        )
 
     def test_update_as_logged_in_user(self):
         self._page_header_for_logged_in_user_test(
@@ -72,6 +77,7 @@ class TestGameLibrary(TestBase):
         response = self.__when_the_test_client_posts_on_a_route(
             "/update/5",
             {
+                "cover-art": (io.BytesIO(b"abcdef"), "test.jpg"),
                 "name": "Crash Bandicoot",
                 "genre": "Platform",
                 "platform": "PS1",
