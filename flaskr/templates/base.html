@@ -10,10 +10,7 @@
   </head>
   <body>
     <div class="container">
-      <div class="page-header">
-        <h1>{{ a_title }}</h1>
-      </div>
-      {% block content %} {% endblock %}
+
       {% with messages = get_flashed_messages() %}
         {% if messages %}
           <ul id="messages" class="list-unstyled">
@@ -23,6 +20,13 @@
           </ul>
         {% endif %}
       {% endwith %}
+
+      <div class="page-header">
+        <h1>{{ a_title }}</h1>
+      </div>
+
+      {% block content %} {% endblock %}
+
       <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
       <script type="text/javascript" src="{{ url_for('static', filename='app.js') }}"></script>
     </div>
