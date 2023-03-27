@@ -2,7 +2,6 @@ from typing import Union
 
 from flask import (
     Blueprint,
-    current_app,
     flash,
     redirect,
     render_template,
@@ -11,11 +10,11 @@ from flask import (
     url_for,
 )
 from werkzeug import Request, Response
-from werkzeug.datastructures import FileStorage
 
 from flaskr import db
 from flaskr.auth.views import login_required
 from flaskr.game_library.models import Game
+from flaskr.game_library.helpers import GameCoverUploader
 
 bp = Blueprint("game_library", __name__)
 
@@ -59,17 +58,12 @@ def create_game_from_data(a_request: Request) -> None:
     cover_art = a_request.files["cover-art"]
 
     add_game_to_database(game)
-    add_cover_to_uploads(cover_art, game.id)
+    GameCoverUploader(game.id).upload_cover_file(cover_art)
 
 
 def add_game_to_database(a_game: Game) -> None:
     db.session.add(a_game)
     db.session.commit()
-
-
-def add_cover_to_uploads(a_cover_art: FileStorage, a_game_id: int):
-    upload_path = current_app.config["UPLOAD_PATH"]
-    a_cover_art.save(f"{upload_path}/cover{a_game_id}.jpg")
 
 
 @bp.route("/update/<int:id>", methods=["GET", "POST"])
