@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
+  {% if is_user_logged_in %}
+    <a href="{{ url_for('auth.logout')}}" class="btn btn-danger">Logout</a>
+    <a href="{{ url_for('game_library.create')}}" class="btn btn-primary">New Game</a>
+  {% else %}
+    <a href="{{ url_for('auth.login')}}" class="btn btn-primary">Login</a>
+  {% endif %}
   <table class="table table-striped table-responsive table-bordered">
     <thead class="thead-default">
       <tr>

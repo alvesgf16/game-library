@@ -12,7 +12,7 @@ from flask import (
 from werkzeug import Request, Response
 
 from flaskr import db
-from flaskr.auth.views import login_required
+from flaskr.auth.views import is_user_logged_in, login_required
 from flaskr.game_library.models import Game
 from flaskr.game_library.helpers import GameCoverUploader
 
@@ -23,7 +23,10 @@ bp = Blueprint("game_library", __name__)
 def index() -> str:
     games = db.session.execute(db.select(Game).order_by(Game.name)).scalars()
     return render_template(
-        "game_library/index.html", a_title="Games", table_data=games
+        "game_library/index.html",
+        a_title="Games",
+        table_data=games,
+        is_user_logged_in=is_user_logged_in(),
     )
 
 
@@ -44,9 +47,9 @@ def create_game() -> Response:
 
 
 def is_game_with_name_in_database(a_name: str) -> bool:
-    return bool(db.session.execute(
-        db.select(Game).filter_by(name=a_name)
-    ).scalar())
+    return bool(
+        db.session.execute(db.select(Game).filter_by(name=a_name)).scalar()
+    )
 
 
 def create_game_from_data(a_request: Request) -> None:
