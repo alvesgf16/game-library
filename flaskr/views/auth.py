@@ -13,8 +13,8 @@ from flask import (
 from werkzeug import Response
 
 from flaskr import db
-from flaskr.auth.models import User
-from flaskr.auth.helpers import UserForm
+from flaskr.models import User
+from flaskr.utils import UserForm
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
 

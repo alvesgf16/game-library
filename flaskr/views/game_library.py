@@ -12,9 +12,9 @@ from flask import (
 from werkzeug import Request, Response
 
 from flaskr import db
-from flaskr.auth.views import is_user_logged_in, login_required
-from flaskr.game_library.models import Game
-from flaskr.game_library.helpers import GameForm, GameCoverUploader
+from flaskr.views.auth import is_user_logged_in, login_required
+from flaskr.models import Game
+from flaskr.utils import GameForm, GameCoverUploader
 
 bp = Blueprint("game_library", __name__)
 

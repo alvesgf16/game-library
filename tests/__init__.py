@@ -1,8 +1,8 @@
 import unittest
 
 from flaskr import create_app, db, db_create
-from flaskr.auth.models import User
-from flaskr.game_library.models import Game
+from flaskr.models.user import User
+from flaskr.models.game import Game
 
 
 class TestBase(unittest.TestCase):

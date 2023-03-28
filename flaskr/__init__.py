@@ -35,10 +35,10 @@ def add_cli_commands(app: Flask) -> None:
 
 
 def register_blueprints(app: Flask) -> None:
-    from . import auth, game_library
+    from .views import auth, game_library
 
-    app.register_blueprint(auth.bp)
-    app.register_blueprint(game_library.bp)
+    app.register_blueprint(auth)
+    app.register_blueprint(game_library)
 
 
 @click.command("db-create")
