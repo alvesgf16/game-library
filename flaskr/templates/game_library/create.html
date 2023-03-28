@@ -9,20 +9,23 @@
     </label>
   </figure>
   <fieldset>
+    {{ form.csrf_token }}
     <div class="form-group">
-      <label for="name">Name</label>
-      <input type="text" name="name" id="name" class="form-control">
+      {{ form.name.label(class="form-label") }}
+      {{ form.name(class="form-control") }}
     </div>
     <div class="form-group">
-      <label for="genre">Genre</label>
-      <input type="text" name="genre" id="genre" class="form-control">
+      {{ form.genre.label(class="form-label") }}
+      {{ form.genre(class="form-control") }}
     </div>
     <div class="form-group">
-      <label for="platform">Platform</label>
-      <input type="text" name="platform" id="platform" class="form-control">
+      {{ form.platform.label(class="form-label") }}
+      {{ form.platform(class="form-control") }}
     </div>
-    <button type="submit" class="btn btn-primary btn-save">Save</button>
-    <a href="{{ url_for('game_library.index')}}" class="btn btn-danger">Back</a>
+    <div class="form-group">
+      {{ form.save(class="btn btn-primary") }}
+      <a href="{{ url_for('game_library.index') }}" class="btn btn-danger">Back</a>
+    </div>
   </fieldset>
 </form>
 {% endblock %}

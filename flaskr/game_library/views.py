@@ -14,7 +14,7 @@ from werkzeug import Request, Response
 from flaskr import db
 from flaskr.auth.views import is_user_logged_in, login_required
 from flaskr.game_library.models import Game
-from flaskr.game_library.helpers import GameCoverUploader
+from flaskr.game_library.helpers import GameForm, GameCoverUploader
 
 bp = Blueprint("game_library", __name__)
 
@@ -35,14 +35,20 @@ def index() -> str:
 def create() -> Union[Response, str]:
     if request.method == "POST":
         return create_game()
-    return render_template("game_library/create.html", a_title="Create a game")
+    form = GameForm()
+    return render_template(
+        "game_library/create.html", a_title="Create a game", form=form
+    )
 
 
 def create_game() -> Response:
-    if is_game_with_name_in_database(request.form["name"]):
+    form = GameForm(request.form)
+    if not form.validate_on_submit():
+        return redirect(url_for("game_library.create"))
+    if is_game_with_name_in_database(form.name.data):
         flash("Game already exists!")
     else:
-        create_game_from_data(request)
+        create_game_from_data(form, request)
     return redirect(url_for("game_library.index"))
 
 
@@ -52,11 +58,13 @@ def is_game_with_name_in_database(a_name: str) -> bool:
     )
 
 
-def create_game_from_data(a_request: Request) -> None:
+def create_game_from_data(
+    a_form: GameForm, a_request: Request
+) -> None:
     game = Game(
-        name=a_request.form["name"],
-        genre=a_request.form["genre"],
-        platform=a_request.form["platform"],
+        name=a_form.name.data,
+        genre=a_form.genre.data,
+        platform=a_form.platform.data,
     )
     cover_art = a_request.files["cover-art"]
 

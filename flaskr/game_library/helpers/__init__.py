@@ -1,3 +1,4 @@
 from .cover_uploader import GameCoverUploader
+from .form_validation import GameForm
 
-__all__ = ['GameCoverUploader']
+__all__ = ["GameForm", "GameCoverUploader"]

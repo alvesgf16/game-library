@@ -61,6 +61,21 @@ class TestGameLibrary(TestBase):
             b"<td>PC</td>",
         )
 
+    def test_game_creation_with_missing_data(self):
+        self.auth.login()
+        response = self.__when_the_test_client_posts_on_a_route(
+            "/create",
+            {
+                "cover-art": (io.BytesIO(b"abcdef"), "test.jpg"),
+                "name": "",
+                "genre": "",
+                "platform": "",
+            },
+        )
+        self.__then_the_page_header_contains_the_correct_text(
+                response, b"<h1>Create a game</h1>"
+            )
+
     def test_update_as_logged_in_user(self):
         self._page_header_for_logged_in_user_test(
             "/update/1", b"<h1>Updating a game</h1>"

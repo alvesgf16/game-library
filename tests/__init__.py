@@ -8,7 +8,11 @@ from flaskr.game_library.models import Game
 class TestBase(unittest.TestCase):
     def setUp(self):
         self.app = create_app(
-            {"TESTING": True, "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:"}
+            {
+                "TESTING": True,
+                "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
+                "WTF_CSRF_ENABLED": False,
+            }
         )
         with self.app.app_context():
             db_create()
