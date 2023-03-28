@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-  <form action="{{ url_for('game_library.update', id=game.id)}}" method="post" enctype="multipart/form-data">
+  <form action="{{ url_for('game_library.update', id=game_id)}}" method="post" enctype="multipart/form-data">
     <figure class="img-thumbnail col-md-4">
       <img src="{{ url_for('game_library.image', filename=game_cover) }}" alt="default cover" class="img-fluid">
       <label for="cover-art" class="file-container">
@@ -9,21 +9,24 @@
       </label>
     </figure>
     <fieldset>
-      <input type="hidden" name="id" value="{{ game.id }}">
-      <div class="form-group">
-        <label for="name">Name</label>
-        <input type="text" name="name" id="name" class="form-control" value="{{ game.name }}">
-      </div>
-      <div class="form-group">
-        <label for="genre">Genre</label>
-        <input type="text" name="genre" id="genre" class="form-control" value="{{ game.genre }}">
-      </div>
-      <div class="form-group">
-        <label for="platform">Platform</label>
-        <input type="text" name="platform" id="platform" class="form-control" value="{{ game.platform }}">
-      </div>
-      <button type="submit" class="btn btn-primary btn-save">Save</button>
-      <a href="{{ url_for('game_library.index')}}" class="btn btn-danger">Back</a>
+      <input type="hidden" name="id" value="{{ game_id }}">
+      {{ form.csrf_token }}
+    <div class="form-group">
+      {{ form.name.label(class="form-label") }}
+      {{ form.name(class="form-control") }}
+    </div>
+    <div class="form-group">
+      {{ form.genre.label(class="form-label") }}
+      {{ form.genre(class="form-control") }}
+    </div>
+    <div class="form-group">
+      {{ form.platform.label(class="form-label") }}
+      {{ form.platform(class="form-control") }}
+    </div>
+    <div class="form-group">
+      {{ form.save(class="btn btn-primary") }}
+      <a href="{{ url_for('game_library.index') }}" class="btn btn-danger">Back</a>
+    </div>
     </fieldset>
   </form>
 {% endblock %}

@@ -81,28 +81,35 @@ def add_game_to_database(a_game: Game) -> None:
 @login_required
 def update(id: int) -> Union[Response, str]:
     game = db.session.execute(db.select(Game).filter_by(id=id)).scalar()
-    game_cover = GameCoverUploader(id).retrieve_uploaded_cover_filename()
     assert isinstance(game, Game)
+    form = GameForm()
+    form.name.data = game.name
+    form.genre.data = game.genre
+    form.platform.data = game.platform
+    game_cover = GameCoverUploader(id).retrieve_uploaded_cover_filename()
     if request.method == "POST":
         return update_game(game)
     return render_template(
         "game_library/update.html",
         a_title="Updating a game",
-        game=game,
+        game_id=id,
+        form=form,
         game_cover=game_cover,
     )
 
 
 def update_game(a_game: Game) -> Response:
-    a_game.name = request.form["name"]
-    a_game.genre = request.form["genre"]
-    a_game.platform = request.form["platform"]
-    game_cover = request.files["cover-art"]
-    db.session.commit()
+    form = GameForm(request.form)
+    if form.validate_on_submit():
+        a_game.name = form.name.data
+        a_game.genre = form.genre.data
+        a_game.platform = form.platform.data
+        game_cover = request.files["cover-art"]
+        db.session.commit()
 
-    cover_file_manager = GameCoverUploader(a_game.id)
-    cover_file_manager.delete_cover_file()
-    cover_file_manager.upload_cover_file(game_cover)
+        cover_file_manager = GameCoverUploader(a_game.id)
+        cover_file_manager.delete_cover_file()
+        cover_file_manager.upload_cover_file(game_cover)
 
     return redirect(url_for("game_library.index"))
 
