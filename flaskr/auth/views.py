@@ -14,6 +14,7 @@ from werkzeug import Response
 
 from flaskr import db
 from flaskr.auth.models import User
+from flaskr.auth.helpers import UserForm
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -40,20 +41,31 @@ def is_user_logged_in() -> bool:
 
 @bp.route("/login", methods=["GET", "POST"])
 def login() -> Union[Response, str]:
-    if request.method == "POST":
-        return auth(request.form["username"])
-    return render_template("login.html", a_title="Login", origin=origin())
+    if is_post_request():
+        return auth()
+    return render_template(
+        "login.html", a_title="Login", origin=origin(), form=user_form()
+    )
+
+
+def is_post_request() -> bool:
+    return request.method == "POST"
+
+
+def user_form(form_data: Optional[dict[str, str]] = None) -> UserForm:
+    return UserForm(form_data)
 
 
 def origin() -> str:
     return request.args.get("origin") or "/"
 
 
-def auth(a_username: str) -> Response:
-    user = is_there_a_user_with_username(a_username)
+def auth() -> Response:
+    form = user_form(request.form)
+    user = is_there_a_user_with_username(form.username.data)
     if user is None:
         flash("Incorrect username.")
-    elif not does_password_match(user.password):
+    elif form.password.data != user.password:
         flash("Incorrect password.")
     else:
         return succesful_user_login(user.username)
@@ -64,10 +76,6 @@ def is_there_a_user_with_username(a_username: str) -> Optional[User]:
     return db.session.execute(
         db.select(User).filter_by(username=a_username)
     ).scalar()
-
-
-def does_password_match(a_password: str) -> bool:
-    return request.form["password"] == a_password
 
 
 def succesful_user_login(a_username: str) -> Response:
