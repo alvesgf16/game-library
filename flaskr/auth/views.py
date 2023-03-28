@@ -46,7 +46,7 @@ def login() -> Union[Response, str]:
 
 
 def origin() -> str:
-    return request.args.get("origin") or ""
+    return request.args.get("origin") or "/"
 
 
 def auth(a_username: str) -> Response:
