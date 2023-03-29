@@ -46,12 +46,18 @@ def create() -> Renderable:
 
 def create_game() -> Response:
     form = GameForm(request.form)
-    if not form.validate_on_submit():
-        return redirect(url_for("game_library.create"))
-    if is_game_with_name_in_database(form.name.data):
+    return (
+        handle_game_creation(form)
+        if form.validate_on_submit()
+        else redirect(url_for("game_library.create"))
+    )
+
+
+def handle_game_creation(a_form: GameForm) -> Response:
+    if is_game_with_name_in_database(a_form.name.data):
         flash("Game already exists!")
     else:
-        create_game_from_data(form, request)
+        create_game_from_data(a_form, request)
     return redirect(url_for("game_library.index"))
 
 
