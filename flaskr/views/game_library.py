@@ -142,8 +142,7 @@ def update_game_from_form(a_game: Game, a_form: GameForm) -> None:
 def update_game_cover(a_game: Game) -> None:
     game_cover = request.files["cover-art"]
     cover_file_manager = GameCoverUploader(a_game.id)
-    cover_file_manager.delete_cover_file()
-    cover_file_manager.upload_cover_file(game_cover)
+    cover_file_manager.update_cover_file(game_cover)
 
 
 @bp.route("/delete/<int:id>")

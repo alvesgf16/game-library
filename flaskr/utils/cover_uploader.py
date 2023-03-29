@@ -28,6 +28,10 @@ class GameCoverUploader:
             "default_cover.jpg",
         )
 
+    def update_cover_file(self, a_cover_art: FileStorage) -> None:
+        self.delete_cover_file()
+        self.upload_cover_file(a_cover_art)
+
     def upload_cover_file(self, a_cover_art: FileStorage) -> None:
         path = self.__get_cover_path()
         a_cover_art.save(path)
