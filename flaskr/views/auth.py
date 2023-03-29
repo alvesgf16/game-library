@@ -1,5 +1,5 @@
 import functools
-from typing import Callable, Optional, Union
+from typing import Optional
 
 from flask import (
     Blueprint,
@@ -14,18 +14,15 @@ from werkzeug import Response
 
 from flaskr import db
 from flaskr.models import User
+from flaskr.types import IntConverter, Renderable, Route
 from flaskr.utils import UserForm
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 
-def login_required(
-    view: Callable[..., Union[Response, str]]
-) -> Callable[..., Union[Response, str]]:
+def login_required(view: Route) -> Route:
     @functools.wraps(view)
-    def wrapped_view(
-        **kwargs: Optional[dict[str, int]]
-    ) -> Union[Response, str]:
+    def wrapped_view(**kwargs: Optional[IntConverter]) -> Renderable:
         return (
             view(**kwargs)
             if is_user_logged_in()
@@ -40,7 +37,7 @@ def is_user_logged_in() -> bool:
 
 
 @bp.route("/login", methods=["GET", "POST"])
-def login() -> Union[Response, str]:
+def login() -> Renderable:
     if is_post_request():
         return auth()
     return render_template(

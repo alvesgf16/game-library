@@ -1,5 +1,3 @@
-from typing import Union
-
 from flask import (
     Blueprint,
     flash,
@@ -14,6 +12,7 @@ from werkzeug import Request, Response
 from flaskr import db
 from flaskr.views.auth import is_user_logged_in, login_required
 from flaskr.models import Game
+from flaskr.types import Renderable
 from flaskr.utils import GameForm, GameCoverUploader
 
 bp = Blueprint("game_library", __name__)
@@ -32,7 +31,7 @@ def index() -> str:
 
 @bp.route("/create", methods=["GET", "POST"])
 @login_required
-def create() -> Union[Response, str]:
+def create() -> Renderable:
     if request.method == "POST":
         return create_game()
     form = GameForm()
@@ -79,7 +78,7 @@ def add_game_to_database(a_game: Game) -> None:
 
 @bp.route("/update/<int:id>", methods=["GET", "POST"])
 @login_required
-def update(id: int) -> Union[Response, str]:
+def update(id: int) -> Renderable:
     game = db.session.execute(db.select(Game).filter_by(id=id)).scalar()
     assert isinstance(game, Game)
     form = GameForm()
