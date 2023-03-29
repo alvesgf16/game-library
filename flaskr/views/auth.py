@@ -60,13 +60,9 @@ def origin() -> str:
 def auth() -> Response:
     form = user_form(request.form)
     user = is_there_a_user_with_username(form.username.data)
-    if user is None:
-        flash("Incorrect username.")
-    elif form.password.data != user.password:
-        flash("Incorrect password.")
-    else:
-        return succesful_user_login(user.username)
-    return redirect(url_for("auth.login"))
+    if user and user.password_matches(form.password.data):
+        return succesful_user_login(user)
+    return unsuccesful_user_login(user)
 
 
 def is_there_a_user_with_username(a_username: str) -> Optional[User]:
@@ -75,10 +71,16 @@ def is_there_a_user_with_username(a_username: str) -> Optional[User]:
     ).scalar()
 
 
-def succesful_user_login(a_username: str) -> Response:
-    set_session_user(a_username)
-    flash(f"{a_username} logged in succesfully!")
+def succesful_user_login(a_user: User) -> Response:
+    set_session_user(a_user.username)
+    flash(f"{a_user.username} logged in succesfully!")
     return redirect(origin_of_request())
+
+
+def unsuccesful_user_login(a_user: Optional[User]) -> Response:
+    error = "Incorrect username." if a_user is None else "Incorrect password."
+    flash(error)
+    return redirect(url_for("auth.login"))
 
 
 def set_session_user(a_username: Optional[str]) -> None:
