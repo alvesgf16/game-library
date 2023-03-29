@@ -18,7 +18,8 @@ from flaskr.controllers.game_library_controller import (
 from flaskr.models import Game
 from flaskr.types import Renderable
 from flaskr.utils import is_post_request, GameCoverUploader, GameForm
-from flaskr.views.auth import is_user_logged_in, login_required
+from flaskr.utils.decorators import login_required
+from flaskr.views.auth import is_user_logged_in
 
 bp = Blueprint("game_library", __name__)
 

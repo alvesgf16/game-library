@@ -1,4 +1,3 @@
-import functools
 from typing import Optional
 
 from flask import (
@@ -14,22 +13,10 @@ from werkzeug import Response
 
 from flaskr import db
 from flaskr.models import User
-from flaskr.types import IntConverter, Renderable, Route
+from flaskr.types import Renderable
 from flaskr.utils import is_post_request, UserForm
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
-
-
-def login_required(view: Route) -> Route:
-    @functools.wraps(view)
-    def wrapped_view(**kwargs: Optional[IntConverter]) -> Renderable:
-        return (
-            view(**kwargs)
-            if is_user_logged_in()
-            else redirect(url_for("auth.login", origin=request.path))
-        )
-
-    return wrapped_view
 
 
 def is_user_logged_in() -> bool:
