@@ -41,7 +41,7 @@ def login() -> Renderable:
     if is_post_request():
         return auth()
     return render_template(
-        "login.html", a_title="Login", origin=origin(), form=user_form()
+        "login.html", a_title="Login", origin=origin(), form=UserForm()
     )
 
 
@@ -49,16 +49,12 @@ def is_post_request() -> bool:
     return request.method == "POST"
 
 
-def user_form(form_data: Optional[dict[str, str]] = None) -> UserForm:
-    return UserForm(form_data)
-
-
 def origin() -> str:
     return request.args.get("origin") or "/"
 
 
 def auth() -> Response:
-    form = user_form(request.form)
+    form = UserForm(request.form)
     user = is_there_a_user_with_username(form.username.data)
     if user and user.password_matches(form.password.data):
         return succesful_user_login(user)
