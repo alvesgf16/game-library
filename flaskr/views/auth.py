@@ -15,7 +15,7 @@ from werkzeug import Response
 from flaskr import db
 from flaskr.models import User
 from flaskr.types import IntConverter, Renderable, Route
-from flaskr.utils import UserForm
+from flaskr.utils import is_post_request, UserForm
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -43,10 +43,6 @@ def login() -> Renderable:
     return render_template(
         "login.html", a_title="Login", origin=origin(), form=UserForm()
     )
-
-
-def is_post_request() -> bool:
-    return request.method == "POST"
 
 
 def origin() -> str:

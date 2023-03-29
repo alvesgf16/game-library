@@ -13,7 +13,7 @@ from flaskr import db
 from flaskr.views.auth import is_user_logged_in, login_required
 from flaskr.models import Game
 from flaskr.types import Renderable
-from flaskr.utils import GameForm, GameCoverUploader
+from flaskr.utils import is_post_request, GameForm, GameCoverUploader
 
 bp = Blueprint("game_library", __name__)
 
@@ -32,7 +32,7 @@ def index() -> str:
 @bp.route("/create", methods=["GET", "POST"])
 @login_required
 def create() -> Renderable:
-    if request.method == "POST":
+    if is_post_request():
         return create_game()
     form = GameForm()
     return render_template(
