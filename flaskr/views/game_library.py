@@ -62,9 +62,8 @@ def handle_game_creation(a_form: GameForm) -> Response:
 
 
 def is_game_with_name_in_database(a_name: str) -> bool:
-    return bool(
-        db.session.execute(db.select(Game).filter_by(name=a_name)).scalar()
-    )
+    select_game_by_name = db.select(Game).filter_by(name=a_name)
+    return bool(db.session.execute(select_game_by_name).scalar())
 
 
 def create_game_from_data(
@@ -89,7 +88,7 @@ def add_game_to_database(a_game: Game) -> None:
 @bp.route("/update/<int:id>", methods=["GET", "POST"])
 @login_required
 def update(id: int) -> Renderable:
-    game = db.session.execute(db.select(Game).filter_by(id=id)).scalar()
+    game = get_game_by_id(id)
     assert isinstance(game, Game)
     form = GameForm()
     form.name.data = game.name
@@ -105,6 +104,11 @@ def update(id: int) -> Renderable:
         form=form,
         game_cover=game_cover,
     )
+
+
+def get_game_by_id(an_id: int) -> Optional[Game]:
+    select_game_by_id = db.select(Game).filter_by(id=an_id)
+    return db.session.execute(select_game_by_id).scalar()
 
 
 def update_game(a_game: Game) -> Response:
@@ -126,11 +130,15 @@ def update_game(a_game: Game) -> Response:
 @bp.route("/delete/<int:id>")
 @login_required
 def delete(id: int) -> Response:
-    game = db.session.execute(db.select(Game).filter_by(id=id)).scalar()
-    db.session.delete(game)
-    db.session.commit()
+    game = get_game_by_id(id)
+    delete_game_from_database(game)
     flash("Game deleted successfully!")
     return redirect(url_for("game_library.index"))
+
+
+def delete_game_from_database(a_game: Optional[Game]) -> None:
+    db.session.delete(a_game)
+    db.session.commit()
 
 
 @bp.route("/uploads/<filename>")
