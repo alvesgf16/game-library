@@ -62,9 +62,8 @@ def auth() -> Response:
 
 
 def is_there_a_user_with_username(a_username: str) -> Optional[User]:
-    return db.session.execute(
-        db.select(User).filter_by(username=a_username)
-    ).scalar()
+    select_by_username = db.select(User).filter_by(username=a_username)
+    return db.session.execute(select_by_username).scalar()
 
 
 def succesful_user_login(a_user: User) -> Response:
