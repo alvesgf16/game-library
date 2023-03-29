@@ -90,10 +90,7 @@ def add_game_to_database(a_game: Game) -> None:
 def update(id: int) -> Renderable:
     game = get_game_by_id(id)
     assert isinstance(game, Game)
-    form = GameForm()
-    form.name.data = game.name
-    form.genre.data = game.genre
-    form.platform.data = game.platform
+    form = create_game_form_from_game(game)
     game_cover = GameCoverUploader(id).retrieve_uploaded_cover_filename()
     if request.method == "POST":
         return update_game(game)
@@ -109,6 +106,14 @@ def update(id: int) -> Renderable:
 def get_game_by_id(an_id: int) -> Optional[Game]:
     select_game_by_id = db.select(Game).filter_by(id=an_id)
     return db.session.execute(select_game_by_id).scalar()
+
+
+def create_game_form_from_game(a_game: Game) -> GameForm:
+    result = GameForm()
+    result.name.data = a_game.name
+    result.genre.data = a_game.genre
+    result.platform.data = a_game.platform
+    return result
 
 
 def update_game(a_game: Game) -> Response:
