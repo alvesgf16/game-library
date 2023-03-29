@@ -34,9 +34,8 @@ def index() -> str:
 def create() -> Renderable:
     if is_post_request():
         return create_game()
-    form = GameForm()
     return render_template(
-        "game_library/create.html", a_title="Create a game", form=form
+        "game_library/create.html", a_title="Create a game", form=GameForm()
     )
 
 
