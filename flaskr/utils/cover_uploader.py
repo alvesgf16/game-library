@@ -10,6 +10,10 @@ class GameCoverUploader:
         self.game_id = a_game_id
         self.upload_path = current_app.config["UPLOAD_PATH"]
 
+    @property
+    def uploaded_files(self) -> list[str]:
+        return os.listdir(self.upload_path)
+
     def upload_cover_file(self, a_cover_art: FileStorage) -> None:
         timestamp = time.time()
         a_cover_art.save(
@@ -17,11 +21,10 @@ class GameCoverUploader:
         )
 
     def retrieve_uploaded_cover_filename(self) -> str:
-        uploaded_files = os.listdir(self.upload_path)
         return next(
             (
                 filename
-                for filename in uploaded_files
+                for filename in self.uploaded_files
                 if f"cover{self.game_id}" in filename
             ),
             "default_cover.jpg",
