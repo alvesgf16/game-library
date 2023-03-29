@@ -32,5 +32,11 @@ class GameCoverUploader:
 
     def delete_cover_file(self) -> None:
         filename = self.retrieve_uploaded_cover_filename()
-        if filename != "default_cover.jpg":
-            os.remove(os.path.join(self.upload_path, filename))
+        if self.__is_not_default_cover(filename):
+            self.__delete_file(filename)
+
+    def __is_not_default_cover(self, a_filename: str) -> bool:
+        return a_filename != "default_cover.jpg"
+
+    def __delete_file(self, a_filename: str) -> None:
+        os.remove(os.path.join(self.upload_path, a_filename))
