@@ -1,3 +1,5 @@
+from typing import Optional
+
 from flask import (
     Blueprint,
     flash,
@@ -66,9 +68,7 @@ def is_game_with_name_in_database(a_name: str) -> bool:
     return bool(db.session.execute(select_game_by_name).scalar())
 
 
-def create_game_from_data(
-    a_form: GameForm, a_request: Request
-) -> None:
+def create_game_from_data(a_form: GameForm, a_request: Request) -> None:
     game = Game(
         name=a_form.name.data,
         genre=a_form.genre.data,
@@ -127,17 +127,23 @@ def create_game_form_from_game(a_game: Game) -> GameForm:
 def update_game(a_game: Game) -> Response:
     form = GameForm(request.form)
     if form.validate_on_submit():
-        a_game.name = form.name.data
-        a_game.genre = form.genre.data
-        a_game.platform = form.platform.data
-        game_cover = request.files["cover-art"]
-        db.session.commit()
-
-        cover_file_manager = GameCoverUploader(a_game.id)
-        cover_file_manager.delete_cover_file()
-        cover_file_manager.upload_cover_file(game_cover)
-
+        update_game_from_form(a_game, form)
+        update_game_cover(a_game)
     return redirect(url_for("game_library.index"))
+
+
+def update_game_from_form(a_game: Game, a_form: GameForm) -> None:
+    a_game.name = a_form.name.data
+    a_game.genre = a_form.genre.data
+    a_game.platform = a_form.platform.data
+    db.session.commit()
+
+
+def update_game_cover(a_game: Game) -> None:
+    game_cover = request.files["cover-art"]
+    cover_file_manager = GameCoverUploader(a_game.id)
+    cover_file_manager.delete_cover_file()
+    cover_file_manager.upload_cover_file(game_cover)
 
 
 @bp.route("/delete/<int:id>")
