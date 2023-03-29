@@ -20,13 +20,18 @@ bp = Blueprint("game_library", __name__)
 
 @bp.route("/")
 def index() -> str:
-    games = db.session.execute(db.select(Game).order_by(Game.name)).scalars()
+    games = list_games()
     return render_template(
         "game_library/index.html",
         a_title="Games",
         table_data=games,
         is_user_logged_in=is_user_logged_in(),
     )
+
+
+def list_games() -> list[Game]:
+    select_all_games = db.select(Game).order_by(Game.name)
+    return list(db.session.execute(select_all_games).scalars())
 
 
 @bp.route("/create", methods=["GET", "POST"])
