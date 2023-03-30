@@ -4,7 +4,7 @@ from typing import Optional
 from flask import redirect, request, url_for
 
 from flaskr.types import IntConverter, Renderable, Route
-from flaskr.views.auth import is_user_logged_in
+from flaskr.controllers.auth_controller import is_user_logged_in
 
 
 def login_required(view: Route) -> Route:
