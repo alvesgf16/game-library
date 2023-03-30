@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-<form action="{{url_for('game_library.create')}}" method="post" enctype="multipart/form-data">
-  <figure class="img-thumbnail col-md-4">
+<form action="{{url_for('game_library.create')}}" method="post" enctype="multipart/form-data" class="game-form">
+  <figure class="img-thumbnail col-md-4 form-image">
     <img src="{{ url_for('game_library.image', filename='default_cover.jpg') }}" alt="default cover" class="img-fluid">
     <label for="cover-art" class="file-container">
       Change cover
@@ -10,19 +10,19 @@
   </figure>
   <fieldset>
     {{ form.csrf_token }}
-    <div class="form-group">
+    <div class="form-group input-box">
       {{ form.name.label(class="form-label") }}
       {{ form.name(class="form-control") }}
     </div>
-    <div class="form-group">
+    <div class="form-group input-box">
       {{ form.genre.label(class="form-label") }}
       {{ form.genre(class="form-control") }}
     </div>
-    <div class="form-group">
+    <div class="form-group input-box">
       {{ form.platform.label(class="form-label") }}
       {{ form.platform(class="form-control") }}
     </div>
-    <div class="form-group">
+    <div class="form-group buttons">
       {{ form.save(class="btn btn-primary") }}
       <a href="{{ url_for('game_library.index') }}" class="btn btn-danger">Back</a>
     </div>
