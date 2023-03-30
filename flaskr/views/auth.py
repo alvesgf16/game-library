@@ -2,8 +2,8 @@ from flask import Blueprint, flash, redirect, render_template, url_for
 from werkzeug import Response
 
 from flaskr.controllers.auth_controller import auth, origin, set_session_user
-from flaskr.types import Renderable
 from flaskr.utils import is_post_request, UserForm
+from flaskr.views.types import Renderable
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
 
