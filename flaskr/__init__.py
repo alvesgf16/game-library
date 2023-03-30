@@ -2,6 +2,7 @@ import click
 from typing import Optional
 
 from flask import Flask
+from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect
@@ -12,6 +13,7 @@ from flaskr.types import TestConfig
 db = SQLAlchemy()
 migrate = Migrate()
 csrf = CSRFProtect()
+bcrypt = Bcrypt()
 
 
 def create_app(test_config: Optional[TestConfig] = None) -> Flask:
@@ -33,6 +35,7 @@ class AppInitializer:
         db.init_app(self.app)
         migrate.init_app(self.app, db)
         csrf.init_app(self.app)
+        bcrypt.init_app(self.app)
         self.__add_cli_commands()
         self.__register_blueprints()
         return self.app
