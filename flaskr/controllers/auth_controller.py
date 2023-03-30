@@ -8,10 +8,6 @@ from flaskr.models import User
 from flaskr.utils import UserForm
 
 
-def is_user_logged_in() -> bool:
-    return "logged_in_user" in session
-
-
 def origin() -> str:
     return request.args.get("origin") or "/"
 
