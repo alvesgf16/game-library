@@ -1,11 +1,3 @@
-from typing import Callable, Union
+from typing import Union
 
-from werkzeug import Response
-
-from flaskr.models import Game as GameModel, User as UserModel
-
-Game = GameModel
-IntConverter = dict[str, int]
-Renderable = Union[Response, str]
-Route = Callable[..., Renderable]
-User = UserModel
+TestConfig = dict[str, Union[bool, str]]

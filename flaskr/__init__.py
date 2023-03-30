@@ -1,10 +1,12 @@
 import click
-from typing import Optional, Union
+from typing import Optional
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect
+
+from flaskr.types import TestConfig
 
 
 db = SQLAlchemy()
@@ -12,33 +14,37 @@ migrate = Migrate()
 csrf = CSRFProtect()
 
 
-def create_app(
-    test_config: Optional[dict[str, Union[bool, str]]] = None
-) -> Flask:
-    app = Flask(__name__)
-
-    app.config.from_pyfile("config.py")
-    if test_config is not None:
-        app.config.update(test_config)
-
-    db.init_app(app)
-    migrate.init_app(app, db)
-    csrf.init_app(app)
-    add_cli_commands(app)
-    register_blueprints(app)
-
-    return app
+def create_app(test_config: Optional[TestConfig] = None) -> Flask:
+    app = AppInitializer(Flask(__name__))
+    app.load_config(test_config)
+    return app.init()
 
 
-def add_cli_commands(app: Flask) -> None:
-    app.cli.add_command(db_create_command)
+class AppInitializer:
+    def __init__(self, app: Flask) -> None:
+        self.app = app
 
+    def load_config(self, test_config: Optional[TestConfig]) -> None:
+        self.app.config.from_pyfile("config.py")
+        if test_config is not None:
+            self.app.config.update(test_config)
 
-def register_blueprints(app: Flask) -> None:
-    from .views import auth, game_library
+    def init(self) -> Flask:
+        db.init_app(self.app)
+        migrate.init_app(self.app, db)
+        csrf.init_app(self.app)
+        self.__add_cli_commands()
+        self.__register_blueprints()
+        return self.app
 
-    app.register_blueprint(auth)
-    app.register_blueprint(game_library)
+    def __add_cli_commands(self) -> None:
+        self.app.cli.add_command(db_create_command)
+
+    def __register_blueprints(self) -> None:
+        from .views import auth, game_library
+
+        self.app.register_blueprint(auth)
+        self.app.register_blueprint(game_library)
 
 
 @click.command("db-create")
