@@ -16,8 +16,7 @@ from flaskr.controllers.game_library_controller import (
     delete_game_from_database,
 )
 from flaskr.controllers.auth_controller import is_user_logged_in
-from flaskr.models import Game
-from flaskr.types import Renderable
+from flaskr.types import Game, Renderable
 from flaskr.utils import is_post_request, GameCoverUploader, GameForm
 from flaskr.utils.decorators import login_required
 
@@ -65,7 +64,7 @@ def render_game_update_template(a_game: Game) -> str:
     return render_template(
         "game_library/update.html",
         a_title="Updating a game",
-        game_id=id,
+        game_id=a_game.id,
         form=form,
         game_cover=game_cover,
     )
